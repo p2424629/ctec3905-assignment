@@ -1,0 +1,139 @@
+Q1:
+  db.getCollection("P2424629_products").find(
+	{ "lk_title" : "Kid's Astronaut Hat" },
+	{ "lk_description": 1, "lk_price": 1, "_id": 0 }
+	)
+
+Q2:
+  db.getCollection("P2424629_products").find(
+	{ $or: [ { "lk_price": 7.99 }, { "lk_price": 14.99 } ] }
+	)
+
+Q3:
+	db.getCollection("P2424629_products").find(
+	{ "lk_price": { $ne: null }, "lk_description": null }
+	).count()
+
+Q4:
+var filterTime=ISODate("2000-06-15").getTime()/1000
+
+db.P2424629_reviews.aggregate([
+
+    {$match: {lk_unixReviewTime: {$lt: filterTime}}},
+    {$group: {_id: "$lk_asin"}}
+
+])
+//	var filterTime=ISODate("2000-06-15").getTime()/1000;
+ 
+		db.getCollection("P2424629_reviews").distinct(
+							"lk_asin",
+							{lk_unixReviewTime : {$lt : filterTime}}
+		)
+
+
+Q5:
+	db.getCollection("P2424629_reviews").aggregate(
+    [
+        { 
+            "$group" : { 
+                "_id" : "$lk_reviewerID", 
+                "NumberOfReviews" : { "$sum" : 1 }, 
+                "ReviewerName" : { "$first" : "$lk_reviewerName" }
+            }
+        }, 
+        { 
+            "$match" : { 
+                "NumberOfReviews" : { "$gte" : 3 }
+            }
+        }, 
+        { 
+            "$sort" : { "ReviewerName" : 1 } 
+        },
+        { 
+            "$project" : { 
+                "_id" : 0, 
+                "ReviewerID" : "$_id", 
+                "ReviewerName" : "$ReviewerName", 
+                "NumberOfReviews" : "$NumberOfReviews"
+            }
+        }
+    ])
+
+
+Q6:
+	db.getCollection("P2424629_products").aggregate([
+    {
+      $match: { lk_title: "Mens Timex" }
+    },
+    { 
+      $project: {_id: 0, NumberOfRelatedViewed:{ $size:"$lk_related.also_viewed" }}
+    }
+	])
+
+Q7:
+	db.getCollection("P2424629_products").aggregate(
+    [
+        { 
+            "$unwind" : { 
+                "path" : "$lk_categories"
+            }
+        }, 
+        { 
+            "$match" : { 
+                "lk_categories" : "T-Shirts"
+            }
+        }, 
+        { 
+            "$project" : { 
+                "_id" : 0, 
+                "ProductID" : "$lk_asin", 
+                "ProductTitle" : "$lk_title"
+            }
+        }
+    ])
+
+Q8:
+	var map = function () {
+	emit(this.lk_reviewerID, this.lk_overall)
+	}
+
+	var reduce = function(key, values) {
+	var max = values[0]
+	values.forEach(function(value) {
+		if (value > max) {
+		max = value
+		}   
+	})
+	return max
+	}
+
+	db.getCollection("P2424629_reviews").mapReduce(map, reduce, {
+	query : {lk_reviewerID : "A2B3TVWTZ7609A"},
+	out : {inline : 1}   
+	})
+
+Q9:
+	db.getCollection("P2424629_reviews").aggregate([
+    {
+        $match: { lk_reviewerID: "A2C65Q9IDNCSR" }
+    },
+    {
+        $lookup: {
+            from: "P2424629_products",
+            localField: "lk_asin",
+            foreignField: "lk_asin",
+            as: "product_data"
+        }
+    },
+    {
+        $unwind: "$product_data"
+    },
+    {
+        $project: {
+            _id: 0,
+            Title: "$product_data.lk_title",
+            Description: "$product_data.lk_description",
+
+        }
+    }
+	])

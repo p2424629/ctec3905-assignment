@@ -1,0 +1,8 @@
+[debug] > Exec(numberOfChapters, None, None)
+[error] Not a valid command: numberOfChapters
+[error] Not a valid project ID: numberOfChapters
+[error] Expected ':'
+[error] Not a valid key: numberOfChapters
+[error] numberOfChapters
+[error]                 ^
+[debug] > Exec(idea-shell, None, None)

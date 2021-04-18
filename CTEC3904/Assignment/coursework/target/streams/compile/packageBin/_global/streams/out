@@ -1,0 +1,21 @@
+[debug] Packaging C:\Users\Administrator\Uni\CTEC3904\Assignment\coursework\target\scala-2.13\coursework_2.13-0.1.jar ...
+[debug] Input file mappings:
+[debug] 	coursework
+[debug] 	  C:\Users\Administrator\Uni\CTEC3904\Assignment\coursework\target\scala-2.13\classes\coursework
+[debug] 	coursework\Document$.class
+[debug] 	  C:\Users\Administrator\Uni\CTEC3904\Assignment\coursework\target\scala-2.13\classes\coursework\Document$.class
+[debug] 	coursework\Document$Book$.class
+[debug] 	  C:\Users\Administrator\Uni\CTEC3904\Assignment\coursework\target\scala-2.13\classes\coursework\Document$Book$.class
+[debug] 	coursework\Document$Book.class
+[debug] 	  C:\Users\Administrator\Uni\CTEC3904\Assignment\coursework\target\scala-2.13\classes\coursework\Document$Book.class
+[debug] 	coursework\Document$Section$.class
+[debug] 	  C:\Users\Administrator\Uni\CTEC3904\Assignment\coursework\target\scala-2.13\classes\coursework\Document$Section$.class
+[debug] 	coursework\Document$Section.class
+[debug] 	  C:\Users\Administrator\Uni\CTEC3904\Assignment\coursework\target\scala-2.13\classes\coursework\Document$Section.class
+[debug] 	coursework\Document.class
+[debug] 	  C:\Users\Administrator\Uni\CTEC3904\Assignment\coursework\target\scala-2.13\classes\coursework\Document.class
+[debug] 	coursework\DocumentData$.class
+[debug] 	  C:\Users\Administrator\Uni\CTEC3904\Assignment\coursework\target\scala-2.13\classes\coursework\DocumentData$.class
+[debug] 	coursework\DocumentData.class
+[debug] 	  C:\Users\Administrator\Uni\CTEC3904\Assignment\coursework\target\scala-2.13\classes\coursework\DocumentData.class
+[debug] Done packaging.

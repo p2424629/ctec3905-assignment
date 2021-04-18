@@ -1,0 +1,15 @@
+[debug] Acquiring lock on file C:\Users\Administrator\Uni\CTEC3904\Assignment\coursework\project\target\.sbt-compilation-infos\coursework-compile\.sbt-idea-lock ...
+[warn] C:\Users\Administrator\Uni\CTEC3904\Assignment\coursework\src\main\scala\coursework\Document.scala:96:30: match may not be exhaustive.
+[warn] It would fail on the following input: (_, Nil)
+[warn]           subsections.splitAt(m - 1) match {
+[warn]                              ^
+[warn] C:\Users\Administrator\Uni\CTEC3904\Assignment\coursework\src\main\scala\coursework\Document.scala:109:30: match may not be exhaustive.
+[warn] It would fail on the following input: (_, Nil)
+[warn]           subsections.splitAt(m - 1) match {
+[warn]                              ^
+[warn] C:\Users\Administrator\Uni\CTEC3904\Assignment\coursework\src\main\scala\coursework\Document.scala:114:30: match may not be exhaustive.
+[warn] It would fail on the following input: (_, Nil)
+[warn]           subsections.splitAt(m - 1) match {
+[warn]                              ^
+[warn] three warnings found
+[debug] Releasing lock on file C:\Users\Administrator\Uni\CTEC3904\Assignment\coursework\project\target\.sbt-compilation-infos\coursework-compile\.sbt-idea-lock.
