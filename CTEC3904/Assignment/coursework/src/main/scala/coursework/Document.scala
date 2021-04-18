@@ -261,7 +261,14 @@ object Document {
      * Exchanges the positions of two chapters in the book. If either of the two
      * chapter numbers do not exist then returns the receiver (this) unchanged.
      */
-    def swapChapters(fst: Int, snd: Int): Book = ???
+    def swapChapters(fst: Int, snd: Int): Book = {
+      val i = fst - 1
+      val j = snd - 1
+
+      val sss = chapters.dropRight(chapters.length - i) ::: (chapters(j) :: chapters.dropRight(chapters.length - j).drop(fst)) ::: ((chapters(i) :: chapters.drop(snd)))
+      //      val sss = chapters.updated(i, chapters(j)).updated(j,chapters(i))
+      new Book(title, sss)
+    }
 
     /**
      * Inserts the new subsection at the start of each of the given chapters. So, for
@@ -352,7 +359,7 @@ object Document {
     //          .slice("2.1")
     //          .lift(1, _.insertSubsection("0", testSection)))
 
-    println(compsci.insertAtZero("1,2,3", testSection))
-
+    //    println(compsci.insertAtZero("1,2,3", testSection))
+    println(compsci.swapChapters(2, 3))
   }
 }
