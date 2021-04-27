@@ -24,8 +24,11 @@ object Document {
    * e.g. "1.2.1.3" ==> List(1,2,1,3)
    */
   implicit def toSectionNumber(s: String): List[Int] = {
-    if (s.isEmpty) List.empty
-    else s.split("[.,]").toList.map(_.toInt)
+    s match {
+      case i if i.contains(".") || i.contains(",") => s.split("[.,]").toList.map(_.toInt)
+      case j if j.length == 1 => List(j).map(_.toInt)
+      case _ => List.empty
+    }
   }
 
 
@@ -93,12 +96,14 @@ object Document {
       after match {
         case List(m: Int) if m >= 0 && m <= subsections.length =>
           subsections.splitAt(m) match {
-            case (left, right) => new Section(heading, content, left ++ (newSection :: right))
+            case (left, right) => new Section(heading, content, left ++
+              (newSection :: right))
           }
         case m :: n :: ps if m > 0 && m <= subsections.length =>
           subsections.splitAt(m - 1) match {
             case (left, s :: right) =>
-              new Section(heading, content, left ++ (s.insertSubsection(n :: ps, newSection) :: right))
+              new Section(heading, content, left ++
+                (s.insertSubsection(n :: ps, newSection) :: right))
           }
         case _ => bad(s"trying to insert after invalid position ${fromSectionNumber(after)}")
       }
@@ -265,8 +270,8 @@ object Document {
       val i = fst - 1
       val j = snd - 1
 
-      val sss = chapters.dropRight(chapters.length - i) ::: (chapters(j) :: chapters.dropRight(chapters.length - j).drop(fst)) ::: ((chapters(i) :: chapters.drop(snd)))
-      //      val sss = chapters.updated(i, chapters(j)).updated(j,chapters(i))
+      //      val sss = chapters.dropRight(chapters.length - i) ::: (chapters(j) :: chapters.dropRight(chapters.length - j).drop(fst)) ::: ((chapters(i) :: chapters.drop(snd)))
+      val sss = chapters.updated(i, chapters(j)).updated(j, chapters(i))
       new Book(title, sss)
     }
 
@@ -296,18 +301,17 @@ object Document {
      * |  Section E
      */
     def insertAtZero(chs: List[Int], newSection: Section): Book = {
-      if (numberOfChapters == 0) bad(s"book has no chapters")
-      else if (chs.isEmpty) bad(s"Didnt provide any Chapters")
-      else if (chs.exists(_ > numberOfChapters)) bad(s"Provided a non existing chapter")
+      if (numberOfChapters == 0) bad("book has no chapters")
+      else if (chs.isEmpty) bad("Problem with Chapters")
+      else if (chs.exists(_ > numberOfChapters)) bad(s"Chapter doesnt exist")
       else {
-        val chaps = 1 to numberOfChapters
-
-        val newChapters = (chapters zip chaps) map {
+        val chapterRange = 1 to numberOfChapters
+        val modifiedChapters = (chapters zip chapterRange) map {
           case (c, n) if chs.contains(n) => c.insertSubsection("0", newSection)
           case (c, n) => c
         }
 
-        new Book(title, newChapters)
+        new Book(title, modifiedChapters)
 
       }
 
@@ -359,7 +363,9 @@ object Document {
     //          .slice("2.1")
     //          .lift(1, _.insertSubsection("0", testSection)))
 
-    //    println(compsci.insertAtZero("1,2,3", testSection))
-    println(compsci.swapChapters(2, 3))
+//    println(level4.insertSubsection("1.5", testSection))
+    //        println(compsci.removeChapter(2))
+    println(compsci.insertAtZero("3,2", testSection))
+    //    println(compsci.swapChapters(2, 3))
   }
 }

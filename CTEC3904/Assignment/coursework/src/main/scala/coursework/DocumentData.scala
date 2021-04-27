@@ -173,7 +173,7 @@ object DocumentData {
   )
 
   val compsci: Book = new Book("Computer Science", List(level4, level5, level6))
-
+  val testbook: Book = new Book("Test Book", List(level5, level6,level4,level41))
   val testSection = new Section("This is a test section",
     """IT ONLY CONTAINS ONE LINE.""".stripMargin.split("\n").toList
   )
