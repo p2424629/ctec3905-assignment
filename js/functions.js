@@ -1,11 +1,25 @@
-import { API_KEY, API_URL, IMG_URL, POSTER_SIZE } from './config.js';
+/* eslint-disable import/extensions */
+/* eslint-disable camelcase */
+import {
+  API_KEY,
+  API_URL,
+  IMG_URL,
+  POSTER_SIZE,
+} from './config.js';
+
+// Take the user to detailed tv show info page.
+function showSelected(ev) {
+  sessionStorage.setItem('showId', ev.currentTarget.showId);
+  window.open('../pages/shows-page.html');
+  return false;
+}
+
 export const scrollToTopHandle = () => {
   const scrollToTop = document.querySelector('.scrollToTop');
 
   // Show ScrollToTop button after scrolling.
-  const scrollableHeight =
-    document.documentElement.scrollHeight -
-    document.documentElement.clientHeight;
+  const scrollableHeight = document.documentElement.scrollHeight
+    - document.documentElement.clientHeight;
   const GOLDEN_RATIO = 0.12;
   if (document.documentElement.scrollTop / scrollableHeight > GOLDEN_RATIO) {
     // show button
@@ -51,10 +65,6 @@ export const notification = (msg = '', type = '', reload = false) => {
   }, 1500);
 };
 
-const showSpinner = () => {
-  const spinner = document.querySelector('.spinner');
-  spinner.style.display = 'block';
-};
 export const clear = (element) => {
   while (element.firstChild) {
     element.removeChild(element.firstChild);
@@ -67,26 +77,28 @@ async function getData(url) {
   return response.json().then((responseJson) => {
     if (responseJson.errors) {
       throw new Error(
-        `HTTP ${response.status} ${response.statusText}: ${responseJson.errors}`
+        `HTTP ${response.status} ${response.statusText}: ${responseJson.errors}`,
       );
     }
     throw new Error(
-      `HTTP ${response.status} ${response.statusText}: ${responseJson.status_message}`
+      `HTTP ${response.status} ${response.statusText}: ${responseJson.status_message}`,
     );
   });
 }
 
 export const getObject = async (pageNum = 1, loc = '', url = null) => {
-  if (!url) {
-    url = pageNum
+  let uri = url;
+  if (!uri) {
+    uri = pageNum
       ? `${API_URL}tv/${loc}?api_key=${API_KEY}&language=en-US&page=${pageNum}`
       : `${API_URL}tv/${loc}?api_key=${API_KEY}&language=en-US`;
   }
-  return getData(encodeURI(url));
+  return getData(encodeURI(uri));
 };
 
 const createShowItem = (id, name, voteAverage, firstAirDate) => {
   const showTitle = document.createElement('h2');
+  showTitle.classList.add('card-title');
   showTitle.textContent = name;
 
   const voteAvgContainer = document.createElement('p');
@@ -185,7 +197,13 @@ const createImg = (poster_path, name) => {
 export const buildResults = (obj, loc = '') => {
   try {
     const seriesInfo = document.getElementById('tvShows');
-    const { id, name, vote_average, first_air_date, poster_path } = obj;
+    const {
+      id,
+      name,
+      vote_average,
+      first_air_date,
+      poster_path,
+    } = obj;
     const showItem = createShowItem(id, name, vote_average, first_air_date);
     const addBtn = createAddBtn(id, loc);
     const overlay = document.createElement('div');
@@ -201,13 +219,6 @@ export const buildResults = (obj, loc = '') => {
     throw new Error(error);
   }
 };
-
-// Take the user to detailed tv show info page.
-function showSelected(ev) {
-  sessionStorage.setItem('showId', ev.currentTarget.showId);
-  window.open('../pages/shows-page.html');
-  return false;
-}
 
 export const infoText = (msg, parent) => {
   if (!msg) return;

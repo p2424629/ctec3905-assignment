@@ -5,6 +5,7 @@
 1. The website will display the latest On-Air Tv shows.
 2. It will also let the user get more details for the selected tv show, as well as recommendations.
 3. It will also have a `Favorites` section that the user can add liked tv-shows.
+4. Create a search ability to search for tv shows.
 
 ## TODO
 - [x] Connect to https://www.themoviedb.org/ API
@@ -20,4 +21,5 @@
 - [ ] Modularize the code base
 - [ ] Add more animations/Fix animations
 - [x] Fix Scroll To Top (This site appears to use a scroll-linked positioning effect. This may not work well with asynchronous panning; see https://developer.mozilla.org/docs/Mozilla/Performance/ScrollLinkedEffects for further details and to join the discussion on related tools and features! series-latest.html)
-- [ ] Need to fix JS to not build DOM elements from strings.
+- [x] Need to fix JS to not build DOM elements from strings.
+
