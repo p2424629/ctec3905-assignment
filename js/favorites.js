@@ -41,7 +41,7 @@ async function recommendTvShows() {
     clear(seriesInfo);
     const obj = await getObject(null, '', url);
     const response = obj.results;
-    response.slice(0, Math.floor(response.length / 3)).forEach((show) => {
+    response.slice(0, Math.floor(response.length / 2)).forEach((show) => {
       buildResults(show);
     });
   } catch (error) {
