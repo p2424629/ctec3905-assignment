@@ -1,0 +1,25 @@
+{
+  "name": "assignment-p2424629",
+  "version": "1.0.0",
+  "description": "Front-End",
+  "main": "index.html",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^7.25.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CTEC3905-2020-21/assignment-p2424629.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CTEC3905-2020-21/assignment-p2424629/issues"
+  },
+  "homepage": "https://github.com/CTEC3905-2020-21/assignment-p2424629#readme"
+}
