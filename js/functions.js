@@ -1,26 +1,25 @@
 /* eslint-disable import/extensions */
 /* eslint-disable camelcase */
-import {
-  API_KEY,
-  API_URL,
-  IMG_URL,
-  POSTER_SIZE,
-} from './config.js';
+import { API_KEY, API_URL, IMG_URL, POSTER_SIZE } from './config.js';
 
 // Take the user to detailed tv show info page.
-function showSelected(ev) {
-  sessionStorage.setItem('showId', ev.currentTarget.showId);
-  window.open('../pages/shows-page.html');
+const showSelected = async (event) => {
+  sessionStorage.setItem('showId', event.currentTarget.showId);
+  window.open(
+    `../pages/shows-page.html?showId=${event.currentTarget.showId}`,
+    '_blank'
+  );
   return false;
-}
+};
 
 export const scrollToTopHandle = () => {
   const scrollToTop = document.querySelector('.scrollToTop');
 
   // Show ScrollToTop button after scrolling.
-  const scrollableHeight = document.documentElement.scrollHeight
-    - document.documentElement.clientHeight;
-  const GOLDEN_RATIO = 0.12;
+  const scrollableHeight =
+    document.documentElement.scrollHeight -
+    document.documentElement.clientHeight;
+  const GOLDEN_RATIO = 0.1;
   if (document.documentElement.scrollTop / scrollableHeight > GOLDEN_RATIO) {
     // show button
     if (!scrollToTop.classList.contains('scrollButtonActive')) {
@@ -52,16 +51,13 @@ export const hideSpinner = () => {
   const spinner = document.querySelector('.spinner');
   spinner.style.display = 'none';
 };
-export const notification = (msg = '', type = '', reload = false) => {
+export const notification = (msg = '', type = '') => {
   if (!msg || !type) return;
   const notify = document.getElementById(type);
   notify.textContent = msg;
   notify.classList.add(type);
   setTimeout(() => {
     notify.classList.remove(type);
-    if (reload) {
-      window.location.reload();
-    }
   }, 1500);
 };
 
@@ -71,17 +67,41 @@ export const clear = (element) => {
   }
 };
 
+// Add tv show to favorite tv shows.
+const addFavorite = (id) => {
+  const storedId = JSON.parse(localStorage.getItem('favoriteSeries')) || [];
+  if (storedId.indexOf(id) === -1) {
+    storedId.push(id);
+    localStorage.setItem('favoriteSeries', JSON.stringify(storedId));
+    // Notification that added to Favorites.
+    notification('Added to Favorites !', 'added');
+  } else {
+    notification('Already stored in Favorites !', 'alreadyStored');
+  }
+};
+
+const removeFavorite = (id) => {
+  const storedId = JSON.parse(localStorage.getItem('favoriteSeries')) || [];
+  const index = storedId.indexOf(id);
+  storedId.splice(index, 1);
+  localStorage.setItem('favoriteSeries', JSON.stringify(storedId));
+  notification('Removed from favorites !', 'alreadyStored');
+  setTimeout(() => {
+    if (document.URL.includes('favorites')) window.location.reload();
+  }, 1600);
+};
+
 async function getData(url) {
   const response = await fetch(url);
   if (response.ok) return response.json();
   return response.json().then((responseJson) => {
     if (responseJson.errors) {
       throw new Error(
-        `HTTP ${response.status} ${response.statusText}: ${responseJson.errors}`,
+        `HTTP ${response.status} ${response.statusText}: ${responseJson.errors}`
       );
     }
     throw new Error(
-      `HTTP ${response.status} ${response.statusText}: ${responseJson.status_message}`,
+      `HTTP ${response.status} ${response.statusText}: ${responseJson.status_message}`
     );
   });
 }
@@ -90,8 +110,8 @@ export const getObject = async (pageNum = 1, loc = '', url = null) => {
   let uri = url;
   if (!uri) {
     uri = pageNum
-      ? `${API_URL}tv/${loc}?api_key=${API_KEY}&language=en-US&page=${pageNum}`
-      : `${API_URL}tv/${loc}?api_key=${API_KEY}&language=en-US`;
+      ? `${API_URL}tv/${loc}?api_key=${API_KEY}&language=en-US&page=${pageNum}&include_adult=false`
+      : `${API_URL}tv/${loc}?api_key=${API_KEY}&language=en-US&include_adult=false`;
   }
   return getData(encodeURI(uri));
 };
@@ -123,6 +143,7 @@ const createShowItem = (id, name, voteAverage, firstAirDate) => {
   airDateContainer.appendChild(airDate);
 
   const detailsBtn = document.createElement('a');
+  detailsBtn.classList.add('details-button');
   detailsBtn.textContent = 'Details';
   detailsBtn.href = '#';
   detailsBtn.showId = id;
@@ -134,51 +155,32 @@ const createShowItem = (id, name, voteAverage, firstAirDate) => {
 
   return showItem;
 };
-// Add tv show to favorite tv shows.
-const addFavorite = (id) => {
-  const storedId = JSON.parse(localStorage.getItem('favoriteSeries')) || [];
-  if (storedId.indexOf(id) === -1) {
-    storedId.push(id);
-    localStorage.setItem('favoriteSeries', JSON.stringify(storedId));
-    // Notification that added to Favorites.
-    notification('Added to Favorites !', 'added');
-  } else {
-    // Notification that it is already in Favorites.
-    notification('Already in favorites !', 'alreadyStored');
-  }
-};
 
-const removeFavorite = (id) => {
-  const storedId = JSON.parse(localStorage.getItem('favoriteSeries')) || [];
-  const index = storedId.indexOf(id);
-  storedId.splice(index, 1);
-  localStorage.setItem('favoriteSeries', JSON.stringify(storedId));
-  notification('Removed from watchlist !', 'alreadyStored', true);
-};
-
-const createAddBtn = (id, loc) => {
+const createAddBtn = (id) => {
   // Change the icon to "trash" for already favorite shows or "heart" for added to favorites.
   const addBtnContainer = document.createElement('div');
   addBtnContainer.classList.add('addBtn');
   const container = document.createElement('span');
   const icon = document.createElement('i');
-  if (document.URL.includes('favorites') && loc === 'favorites') {
+  const storedId = JSON.parse(localStorage.getItem('favoriteSeries')) || [];
+  if (storedId.indexOf(id) === -1) {
+    icon.classList.add('material-icons', 'favorite');
+    icon.textContent = 'favorite';
+    container.appendChild(icon);
+    addBtnContainer.addEventListener('click', () => {
+      addFavorite(id);
+      icon.style.color = 'red';
+      // icon.classList.add('favorite', 'favoriteMarked');
+    });
+  } else {
     icon.classList.add('material-icons', 'trash');
     icon.textContent = 'delete';
     container.appendChild(icon);
     addBtnContainer.addEventListener('click', () => {
       removeFavorite(id);
     });
-  } else {
-    icon.classList.add('material-icons', 'favorite');
-    icon.textContent = 'favorite';
-    container.appendChild(icon);
-    addBtnContainer.addEventListener('click', () => {
-      addFavorite(id);
-    });
   }
   addBtnContainer.appendChild(container);
-
   return addBtnContainer;
 };
 
@@ -197,13 +199,7 @@ const createImg = (poster_path, name) => {
 export const buildResults = (obj, loc = '') => {
   try {
     const seriesInfo = document.getElementById('tvShows');
-    const {
-      id,
-      name,
-      vote_average,
-      first_air_date,
-      poster_path,
-    } = obj;
+    const { id, name, vote_average, first_air_date, poster_path } = obj;
     const showItem = createShowItem(id, name, vote_average, first_air_date);
     const addBtn = createAddBtn(id, loc);
     const overlay = document.createElement('div');
@@ -228,13 +224,12 @@ export const infoText = (msg, parent) => {
   parent.appendChild(infoTextPar);
 };
 
-export const errorHandling = (ev, appendTo) => {
-  const errorMessage = document.querySelector('#error');
+export const errorHandling = (ev) => {
+  const errorMessage = document.getElementById('error');
   const infoTxt = document.querySelector('.infoText');
   if (infoTxt) infoTxt.remove();
   if (errorMessage) errorMessage.textContent = '';
   hideSpinner();
   errorMessage.textContent = ev.reason ? ev.reason : ev;
   errorMessage.classList.add('error', 'active');
-  appendTo.appendChild(errorMessage);
 };

@@ -58,14 +58,15 @@ a {
   color: var(--white_color);
 }
 
-.scrollToTop:hover {
-  background-color: var(--white_color);
-}
+@media (hover: hover) and (pointer: fine) {
+  .scrollToTop:hover {
+    background-color: var(--white_color);
+  }
 
-.scrollToTop:hover i {
-  color: var(--background_color);
+  .scrollToTop:hover i {
+    color: var(--background_color);
+  }
 }
-
 .scrollToTop.scrollButtonActive {
   transition: all 0.35s ease;
   visibility: visible;
@@ -340,7 +341,8 @@ nav a:hover {
   margin: 5px;
 }
 
-.card .overlay .tvShow a {
+/* button shouldn't follow the delay animation for hover */
+.details-button {
   display: flex;
   position: relative;
   bottom: 0;
@@ -355,14 +357,17 @@ nav a:hover {
   font-family: 'Montserrat SemiBold', sans-serif;
   margin: 0.2rem;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
   outline: none !important;
 }
 
-.card .overlay .tvShow a:hover {
-  background-color: var(--white_color);
+/* button shouldn't follow the delay animation for hover */
+@media (hover: hover) {
+  .details-button:hover {
+    background-color: var(--white_color);
+    transition-delay: 0s;
+  }
 }
-
 .tvShow p {
   font-family: 'Montserrat Medium', sans-serif;
   color: white;
@@ -469,9 +474,10 @@ nav a:hover {
 .addBtn .favorite:hover {
   color: var(--red_color);
   animation: heart 0.65s ease forwards infinite;
+  transition-delay: 0s;
 }
 
-.addBtn .favoriteMarked {
+.addBtn .favorite:focus {
   color: var(--red_color);
 }
 
@@ -553,13 +559,13 @@ nav a:hover {
   cursor: pointer;
   transition: 0.3s ease;
 }
-
-#prev:hover,
-#next:hover {
-  color: var(--dark_color);
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+@media (hover: hover) and (pointer: fine) {
+  #prev:hover,
+  #next:hover {
+    color: var(--dark_color);
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+  }
 }
-
 .remove,
 .randomize {
   outline: none !important;
@@ -577,14 +583,14 @@ nav a:hover {
   cursor: pointer;
   box-shadow: 0 3px rgba(0, 0, 0, 0.1);
 }
-
-.remove:hover,
-.randomize:hover {
-  background-color: var(--white_color);
-  color: var(--background_color);
-  box-shadow: 4px 4px rgba(0, 0, 0, 0.15);
+@media (hover: hover) and (pointer: fine) {
+  .remove:hover,
+  .randomize:hover {
+    background-color: var(--white_color);
+    color: var(--background_color);
+    box-shadow: 4px 4px rgba(0, 0, 0, 0.15);
+  }
 }
-
 /* TV SHOW OUTPUT CARDS END*/
 
 /* NOTIFICATIONS */
@@ -677,6 +683,7 @@ nav a:hover {
     position: relative;
   }
 
+  /* add animated line on top of links */
   nav a::before {
     content: '';
     display: block;
@@ -746,6 +753,7 @@ nav a:hover {
     transition-delay: 1s;
   }
 
+  /* green line of title starts from the left */
   .card-title::after {
     transform-origin: left;
     transform: scaleX(0);
@@ -762,8 +770,8 @@ nav a:hover {
     transform: scale(0);
   }
 
+  /* "heart" and "trash" buttons should appeared after the delay */
   .card:hover .addBtn i {
-    opacity: 1;
     transition-delay: 0.5s;
   }
 

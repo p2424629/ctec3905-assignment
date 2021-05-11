@@ -16,7 +16,6 @@ const pages = document.querySelector('.pages');
 const next = document.getElementById('next');
 const prev = document.getElementById('prev');
 const main = document.querySelector('.main');
-
 // Display the tv-shows.
 async function createOutput(pageNumber) {
   clear(seriesInfo);
@@ -42,13 +41,21 @@ async function createOutput(pageNumber) {
       prev.style.display = 'none';
     }
   } catch (error) {
-    errorHandling(error, main);
+    errorHandling(error);
+    console.log(error);
   }
 }
 
 const onFirstLoad = async () => {
-  const results = await createOutput(1);
-  return results;
+  // Set the page number parameter on the url
+  const url = new URL(window.location.href);
+  const page = url.searchParams.get('page');
+  if (!page) {
+    url.searchParams.set('page', 1);
+    window.history.replaceState(null, null, url);
+    return createOutput(1);
+  }
+  return createOutput(page);
 };
 
 const initApp = () => {
@@ -64,12 +71,19 @@ document.addEventListener('readystatechange', (e) => {
   }
 });
 
+function addPageToUrl(page) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('page', page);
+  window.history.replaceState(null, null, url);
+}
+
 // Page Number
 let pageNum = 1;
 // Get "prev" id and goes backwards one page.
 prev.addEventListener('click', () => {
   pageNum -= 1;
   window.scrollTo(0, 0);
+  addPageToUrl(pageNum);
   createOutput(pageNum);
 });
 
@@ -77,6 +91,7 @@ prev.addEventListener('click', () => {
 next.addEventListener('click', () => {
   pageNum += 1;
   window.scrollTo(0, 0);
+  addPageToUrl(pageNum);
   createOutput(pageNum);
 });
 

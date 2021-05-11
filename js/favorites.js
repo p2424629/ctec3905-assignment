@@ -32,20 +32,22 @@ async function recommendTvShows() {
 
   // Get random page on each call.
   const minPage = 1;
-  const maxPage = 5;
+  const maxPage = 10;
   const recommendedPage = Math.floor(
     Math.random() * (maxPage - minPage + 1) + minPage,
   );
-  const url = `${API_URL}discover/tv?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&first_air_date_year=${recommendedYear}&page=${recommendedPage}&vote_average.gte=7&include_null_first_air_dates=false`;
+  const url = `${API_URL}discover/tv?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&
+  first_air_date_year=${recommendedYear}&page=${recommendedPage}&
+  vote_average.gte=7&include_null_first_air_dates=false&include_adult=false`;
   try {
     clear(seriesInfo);
     const obj = await getObject(null, '', url);
     const response = obj.results;
-    response.slice(0, Math.floor(response.length / 2)).forEach((show) => {
+    response.slice(0, Math.floor(response.length / 1.5)).forEach((show) => {
       buildResults(show);
     });
   } catch (error) {
-    errorHandling(error, main);
+    errorHandling(error);
   }
 }
 
@@ -66,7 +68,7 @@ const onFirstLoad = async () => {
         const obj = await getObject(null, id);
         buildResults(obj, 'favorites');
       } catch (error) {
-        errorHandling(error, main);
+        errorHandling(error);
       }
     });
   } else {
@@ -97,7 +99,10 @@ document.addEventListener('readystatechange', (e) => {
 removeAllTvShows.addEventListener('click', () => {
   localStorage.removeItem('favoriteSeries');
   // Notification that all tv shows are removed from watchlist.
-  notification('Removed all favorite tv shows !', 'alreadyStored', true);
+  notification('Removed all favorite tv shows !', 'alreadyStored');
+  setTimeout(() => {
+    if (document.URL.includes('favorites')) window.location.reload();
+  }, 1600);
 });
 
 randomTvShows.addEventListener('click', () => {

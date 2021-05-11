@@ -6,8 +6,8 @@
     <title>Show Page | P-2424629</title>
     <!--Fixes console error for favicon.ico:1-->
     <link rel="shortcut icon" href="#" />
-    <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="css/fonts.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/fonts.css" />
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
@@ -24,7 +24,7 @@
         >
           <img
             class="logo_header"
-            src="images/tmdb.svg"
+            src="../images/tmdb.svg"
             width="154"
             height="20"
             alt="The Movie Database (TMDb)"
@@ -34,8 +34,8 @@
       <input type="checkbox" id="nav-toggle" class="nav-toggle" />
       <nav>
         <ul>
-          <li><a href="./index.html">Home</a></li>
-          <li><a href="./pages/favorites.html">Favorites</a></li>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="favorites.html">Favorites</a></li>
           <li>
             <a
               href="https://tinyurl.com/4mxwzz3c"
@@ -54,38 +54,39 @@
     <main class="main">
       <!-- Spinner -->
       <div class="spinner"></div>
+      <!-- Error MSGs -->
+      <div id="error"></div>
+
       <!-- Container that will showcase the info, links, trailer, recommended list -->
       <div class="container">
         <!-- Notifications -->
-        <div class="notification" id="added">Added to Watchlist !</div>
-        <div class="notification" id="alreadyStored">
-          Already in watchlist !
-        </div>
-        <div id="movie"></div>
+        <div class="notification" id="added"></div>
+        <div class="notification" id="alreadyStored"></div>
+
+        <div id="tvShow"></div>
+
         <h2 id="trailer_title">Trailer</h2>
         <div id="trailer"></div>
+
         <div id="rec_title">
           <h1>Recommendations</h1>
-          <p>Here are some similar movies to this one:</p>
+          <p>Here are some similar TV Shows:</p>
         </div>
         <div id="recommended"></div>
-        <div class="page">
+
+        <!-- Buttons for Pages -->
+        <div class="pages">
           <button id="prev" title="Previous page">PREVIOUS</button>
           <button id="next" title="Next page">NEXT</button>
         </div>
         <div id="overlay" class="overlay"></div>
       </div>
       <!-- Smooth scroll to top button -->
-      <button id="scrollToTop">
+      <button class="scrollToTop">
         <i class="material-icons upArrow">expand_less</i>
       </button>
     </main>
     <!-- Script links -->
-    <script type="module" src="js/shows-page.js"></script>
-    <!-- Axios link -->
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script>
-      getShowInfo();
-    </script>
+    <script type="module" src="../js/shows-page.js"></script>
   </body>
 </html>
