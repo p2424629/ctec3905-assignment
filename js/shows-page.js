@@ -1,32 +1,15 @@
 //API STUFF.
-/*eslint-disable */
-import {
-  API_KEY,
-  API_URL,
-  IMG_URL,
-  POSTER_SIZE
-} from './config.js';
+// /*eslint-disable */
+import { API_KEY, API_URL, IMG_URL, POSTER_SIZE } from './config.js';
 import {
   scrollToTopHandle,
   hideMenu,
   hideSpinner,
   getObject,
-  buildResults,
+  buildShowResults,
   clear,
   errorHandling,
 } from './functions.js';
-
-//Spinner.
-const spinner = document.querySelector('.spinner');
-const container = document.querySelector('.container');
-spinner.style.display = 'none';
-container.style.display = 'none';
-
-const buildShowResults = (showInfo, videoUrl, actors, externals) => {
-  const genres = showInfo.genres.map((ele) => {
-    return ele.name;
-  });
-};
 
 const onFirstLoad = async () => {
   // showId from url parameters
@@ -43,14 +26,12 @@ const onFirstLoad = async () => {
   const showInfo = results[0];
 
   const videoUrl = results[1];
-  const actors = results[2].cast.map((ele) => {
-    return {
-      name: ele.name,
-      picture: ele.profile_path,
-      character: ele.character,
-      actorId: ele.id,
-    };
-  });
+  const actors = results[2].cast.map((ele) => ({
+    name: ele.name,
+    picture: ele.profile_path,
+    character: ele.character,
+    actorId: ele.id,
+  }));
 
   const externals = results[3];
 

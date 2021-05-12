@@ -189,7 +189,7 @@ const createImg = (poster_path, name) => {
   imgContainer.classList.add('card_img');
   const imgSrc = document.createElement('img');
   imgSrc.src = poster_path
-    ? `${IMG_URL}/${POSTER_SIZE}/${poster_path}`
+    ? `${IMG_URL}${POSTER_SIZE}${poster_path}`
     : '../images/image-not-found.jpg';
   imgSrc.alt = name;
   imgContainer.appendChild(imgSrc);
@@ -214,6 +214,139 @@ export const buildResults = (obj, loc = '') => {
   } catch (error) {
     throw new Error(error);
   }
+};
+
+export const buildShowResults = (showInfo, videoUrl, actors, externals) => {
+  try {
+    const main = document.querySelector('.main-details');
+
+    // Creating Rows for show details.
+    const tvShowRow = document.createElement('div');
+    tvShowRow.classList.add('tvShowRow');
+    const castsRow = document.createElement('div');
+    castsRow.classList.add('castsRow');
+    const trailerRow = document.createElement('div');
+    trailerRow.classList.add('trailerRow');
+    const recommendationRow = document.createElement('div');
+    recommendationRow.classList.add('recommendationRow');
+
+    const [posterContainer, tvShowDetailsContainer] = detailsTvInfo(showInfo);
+
+    const title = document.createElement('h4');
+    title.textContent = 'Top Cast Actors';
+
+    const actorsToShow = actors.splice(0, 8).map((ele) => {
+      const img = ele.picture
+        ? `${IMG_URL}w300${ele.picture}`
+        : '..images/image-not-found.jpg';
+      const actorCard = document.createElement('div');
+      actorCard.classList.add('actorCard', 'col');
+      const cardPanel = document.createElement('div');
+      cardPanel.classList.add('cardPanel');
+      const actorImg = document.createElement('img');
+      actorImg.classList.add('actorImg');
+      actorImg.src = img;
+      actorImg.alt = `${ele.name}-poster`;
+      const actorName = document.createElement('h6');
+      actorName.classList.add('actorName');
+      const smallSpan = document.createElement('span');
+      const charName = document.createElement('h6');
+      charName.classList.add('charName');
+      if (ele.character) {
+        actorName.textContent = ele.name;
+        smallSpan.textContent = 'AS';
+        charName.textContent = ele.character;
+        cardPanel.append(actorImg, actorName, smallSpan, charName);
+      } else {
+        actorName.textContent = ele.name;
+        cardPanel.append(actorImg, actorName);
+      }
+      actorCard.appendChild(cardPanel);
+      return actorCard;
+    });
+
+    castsRow.append(title, ...actorsToShow);
+    // Appending elements to rows.
+    tvShowRow.append(posterContainer, tvShowDetailsContainer);
+    // main.append(tvShowRow, castsRow, trailerRow, recommendationRow);
+    main.append(tvShowRow, castsRow);
+    hideSpinner();
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const detailsTvInfo = (showInfo) => {
+  // Creating elements for tvShowRow.
+
+  // Genres and Poster
+  const genres = showInfo.genres.map((ele) => ` ${ele.name}`);
+  const posterContainer = createImg(showInfo.poster_path, showInfo.name);
+  posterContainer.classList.add('details', 'col');
+
+  // Container to hold all the details
+  const tvShowDetailsContainer = document.createElement('div');
+  tvShowDetailsContainer.classList.add('tvShowDetailsContainer');
+  const tvShowDetails = document.createElement('div');
+  tvShowDetails.classList.add('tvShowDetails', 'col');
+  const title = document.createElement('h3');
+  title.textContent = showInfo.name;
+
+  // Tagline
+  const blockQuote = document.createElement('blockquote');
+  const quoteIconLeft = document.createElement('i');
+  quoteIconLeft.classList.add('material-icons');
+  quoteIconLeft.textContent = 'format_quote';
+  quoteIconLeft.style = 'transform: scaleX(-1)'; // Turn the quote around
+  const quote = document.createElement('p');
+  quote.textContent = showInfo.tagline;
+  const quoteIconRight = document.createElement('i');
+  quoteIconRight.classList.add('material-icons');
+  quoteIconRight.textContent = 'format_quote';
+  blockQuote.append(quoteIconLeft, quote, quoteIconRight);
+
+  // Details of Tv Show
+  const runtime = document.createElement('h6');
+  const runtimeCont = document.createElement('span');
+  runtime.textContent = 'Runtime: ';
+  runtimeCont.textContent = showInfo.episode_run_time[0];
+  runtime.appendChild(runtimeCont);
+  const genre = document.createElement('h6');
+  genre.textContent = 'Genres: ';
+  const genreCont = document.createElement('span');
+  genreCont.textContent = genres;
+  genre.appendChild(genreCont);
+  const releaseDate = document.createElement('h6');
+  releaseDate.textContent = 'Release date: ';
+  const releaseCont = document.createElement('span');
+  releaseCont.textContent = showInfo.first_air_date;
+  releaseDate.appendChild(releaseCont);
+  const homepage = document.createElement('h6');
+  homepage.textContent = 'Home page: ';
+  const homepageCont = document.createElement('a');
+  homepageCont.href = showInfo.homepage;
+  homepageCont.target = '_blank';
+  homepageCont.text = 'Visit homepage';
+  homepage.appendChild(homepageCont);
+
+  // Overview of Tv Show
+  const overview = document.createElement('p');
+  overview.textContent = showInfo.overview;
+  tvShowDetails.append(
+    title,
+    blockQuote,
+    runtime,
+    genre,
+    releaseDate,
+    homepage,
+    overview
+  );
+
+  // Buttons
+  const buttons = document.createElement('div');
+  tvShowDetailsContainer.append(tvShowDetails, buttons);
+
+  return [posterContainer, tvShowDetailsContainer];
 };
 
 export const infoText = (msg, parent) => {

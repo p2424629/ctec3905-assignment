@@ -1,6 +1,9 @@
 /* eslint-disable import/extensions */
 // /* eslint-disable */
 import {
+  IMG_URL
+} from './config.js';
+import {
   scrollToTopHandle,
   hideMenu,
   hideSpinner,
@@ -26,6 +29,8 @@ async function createOutput(pageNumber) {
       buildResults(show);
     });
     hideSpinner();
+
+    randomImg(obj);
     // Show the pages buttons after tvShows are listed.
     const totalPages = obj.total_pages;
     if (totalPages < 2) {
@@ -70,6 +75,34 @@ document.addEventListener('readystatechange', (e) => {
     initApp();
   }
 });
+
+const randomImg = (obj) => {
+  let randomImageContainer = document.querySelector('.randomImageContainer');
+  if (randomImageContainer) {
+    clear(randomImageContainer);
+  } else {
+    randomImageContainer = document.createElement('div');
+    randomImageContainer.classList.add('randomImageContainer');
+  }
+  const cleanObj = obj.results.filter((res) => res.backdrop_path);
+  const randomShow =
+    cleanObj[Math.floor(Math.random() * cleanObj.length)] || cleanObj[0];
+  const randomImage = document.createElement('div');
+  randomImage.classList.add('randomImage');
+  randomImage.style = `--url: url('${IMG_URL}w1280${randomShow.backdrop_path}')`; // Passing arguments to css file from JS.
+  const pContainer = document.createElement('div');
+  pContainer.classList.add('pContainer');
+  const randomTitle = document.createElement('h4');
+  randomTitle.textContent = randomShow.name;
+  const randomParagraph = document.createElement('p');
+  randomParagraph.classList.add('randomParagraph');
+  randomParagraph.textContent = randomShow.overview;
+  pContainer.append(randomTitle, randomParagraph);
+  randomImage.appendChild(pContainer);
+  randomImageContainer.appendChild(randomImage);
+  const parent = document.querySelector('.main').parentNode;
+  parent.insertBefore(randomImageContainer, main);
+};
 
 function addPageToUrl(page) {
   const url = new URL(window.location.href);

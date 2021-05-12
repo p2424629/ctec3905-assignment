@@ -7,7 +7,7 @@
 :root {
   --white_color: #f5f5f5;
   --background_color: #2f3640;
-  --dark_color: rgba(68, 68, 68, 0.801);
+  --dark_color: rgba(68, 68, 68, 0.8);
   --red_color: #e1302a;
   --hover: rgba(0, 214, 170, 0.85);
 }
@@ -67,6 +67,7 @@ a {
     color: var(--background_color);
   }
 }
+
 .scrollToTop.scrollButtonActive {
   transition: all 0.35s ease;
   visibility: visible;
@@ -104,7 +105,7 @@ a {
 
 /* Page Title */
 .pageTitle {
-  margin-top: 5rem;
+  margin-top: 2rem;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -138,9 +139,13 @@ a {
   justify-content: center;
 }
 
-/* Global parameters. - END */
+/* ========== Global parameters. - END ========== */
 
-/* navigation styles start here */
+/* ========== NAV BAR STYLES START ========== */
+.nav-fixed {
+  position: relative;
+  height: 64px;
+}
 
 header {
   background: var(--background_color);
@@ -152,7 +157,7 @@ header {
 }
 
 .logo {
-  font-family: 'Montserrat Regular', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   color: var(--white_color);
   padding: 1rem;
   width: 200px;
@@ -216,17 +221,14 @@ header {
 
 .nav-toggle-label.active span:nth-child(1) {
   transform: rotate(45deg);
-  z-index: 955;
 }
 
 .nav-toggle-label.active span:nth-child(2) {
-  left: 30px;
   opacity: 0;
 }
 
 .nav-toggle-label.active span:nth-child(3) {
   transform: rotate(-45deg);
-  z-index: 955;
 }
 
 .nav-toggle-label.active span {
@@ -274,18 +276,86 @@ nav a:hover {
   color: var(--hover);
 }
 
-.nav-toggle:checked ~ nav {
+.nav-toggle:checked~nav {
   transform: scale(1, 1);
 }
 
-.nav-toggle:checked ~ nav a {
+.nav-toggle:checked~nav a {
   opacity: 1;
   transition: opacity 250ms ease-in-out 250ms;
 }
 
-/* Navigation bar - END. */
+/* ========== NAV BAR STYLES - END. ========== */
 
-/* TV SERIES output - START. */
+/* ========== RANDOM SHOW TOP IMAGE STYLE - START ==========*/
+.randomImageContainer {
+  height: 500px;
+}
+
+.randomImageContainer::before {
+  content: '';
+  display: block;
+  height: 10px;
+  background: var(--hover);
+  position: absolute;
+  top: 3.5rem;
+  left: 0;
+  right: 0;
+}
+
+.randomImage {
+  background: linear-gradient(to bottom,
+      rgba(0, 0, 0, 0) 39%,
+      rgba(0, 0, 0, 0) 41%,
+      rgba(0, 0, 0, 0.65) 100%),
+    var(--url);
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  background-size: 100%, cover !important;
+  position: relative;
+  animation: animateImg 1s;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  overflow: hidden;
+}
+
+@keyframes animateImg {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.pContainer {
+  color: var(--white_color);
+  padding: 20px;
+  position: relative;
+  top: 45%;
+  font-size: 1.5ch;
+}
+
+h4 {
+  font-size: 1.5rem;
+  line-height: 110%;
+  margin: 1.5rem 0 1rem 0;
+  font-weight: 400;
+}
+
+.randomParagraph {
+  overflow: hidden;
+  position: relative;
+  text-align: justify;
+  margin-right: -1em;
+  padding-right: 1em !important;
+}
+
+/* ========== RANDOM IMAGE END ========== */
+
+/* ========== TV SERIES output - START. ========== */
 
 #tvShows {
   margin-top: 1rem;
@@ -368,6 +438,7 @@ nav a:hover {
     transition-delay: 0s;
   }
 }
+
 .tvShow p {
   font-family: 'Montserrat Medium', sans-serif;
   color: white;
@@ -436,16 +507,6 @@ nav a:hover {
   transition: 0.2s ease-out;
 }
 
-/* TODO: CHECK THIS !!!! */
-.upcoming {
-  height: 550px;
-}
-
-.upcoming img {
-  width: 100%;
-  height: 450px;
-}
-
 .card .addBtn {
   position: absolute;
   top: 10px;
@@ -453,7 +514,7 @@ nav a:hover {
   display: flex;
 }
 
-.card .addBtn > * {
+.card .addBtn>* {
   margin: 0 3px;
 }
 
@@ -517,6 +578,159 @@ nav a:hover {
   }
 }
 
+/* TV SHOWS DETAILS PAGE - START */
+.main-details {
+  display: block;
+  width: 85%;
+  margin: 0 auto;
+  max-width: 1280px;
+}
+
+.col {
+  float: left;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0 0.75rem;
+  min-height: 1px;
+}
+
+.tvShowRow::after,
+.castsRow::after,
+.trailerRow::after,
+.recommendationRow::after {
+  content: '';
+  clear: both;
+  display: grid;
+}
+
+.tvShowRow,
+.castsRow,
+.trailerRow,
+.recommendationRow {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+}
+
+.tvShowRow .card_img {
+  /* display: flex;
+  justify-content: center; */
+  width: 100%;
+  margin-left: auto;
+  left: auto;
+  right: auto;
+  transition: 0.5s ease-in-out;
+}
+
+.tvShowRow .tvShowDetails {
+  display: inline-block;
+  width: 100%;
+  margin-left: auto;
+  left: auto;
+  right: auto;
+}
+
+.tvShowRow .card_img img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  cursor: zoom-in;
+  position: relative;
+  transition: opacity 0.4s;
+  backface-visibility: hidden;
+}
+
+h3 {
+  font-family: 'Montserrat SemiBold', Arial, Helvetica, sans-serif;
+  font-size: 4.5ch;
+  line-height: 110%;
+  margin: 0 0 1.2rem 0;
+}
+
+.main-details h4 {
+  font-family: 'Montserrat SemiBold', Arial, Helvetica, sans-serif;
+  padding: 0 0.75rem;
+}
+
+h6 {
+  font-family: 'Montserrat SemiBold', Arial, Helvetica, sans-serif;
+  font-weight: bolder;
+  font-size: 1.15rem;
+  line-height: 110%;
+  margin: 0.8rem 0 0.5rem 0;
+}
+
+h6 span {
+  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+  font-weight: normal;
+}
+
+h6 a {
+  color: #039be5;
+}
+
+blockquote {
+  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+  font-style: italic;
+  margin: 20px 0;
+  padding-left: 1.5rem;
+  border-left: 5px solid #ee6e73;
+  font-size: 1.3ch;
+}
+
+blockquote p {
+  display: inline;
+}
+
+.castsRow .actorCard {
+  width: 50%;
+  margin-left: auto;
+  text-align: center;
+}
+
+.cardPanel {
+  max-height: 370px;
+  min-height: 320px;
+  transition: box-shadow 0.25s, -webkit-box-shadow 0.25s;
+  padding: 24px;
+  margin: 0.5rem 0 1rem 0;
+  border-radius: 2px;
+  background-color: #fff;
+  -webkit-transition: -webkit-box-shadow 0.25s;
+  transition: -webkit-box-shadow 0.25s;
+  transition: box-shadow 0.25s;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.cardPanel img {
+  max-width: 100%;
+  height: auto;
+  max-height: 156px;
+  border-style: none;
+  -webkit-transition: -webkit-box-shadow 0.25s;
+  transition: -webkit-box-shadow 0.25s;
+  transition: box-shadow 0.25s;
+  transition: box-shadow 0.25s, -webkit-box-shadow 0.25s;
+  text-align: center;
+}
+
+.actorName,
+.charName,
+.cardPanel span {
+  font-family: 'Montserrat SemiBold', Arial, Helvetica, sans-serif;
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+/* ========== TV SHOWS STYLES END ========== */
+
+/* ========== GENERAL ELEMENTS ========== */
 .infoText {
   color: var(--dark_color);
   font-family: 'Montserrat Black', Arial, Helvetica, sans-serif;
@@ -559,13 +773,16 @@ nav a:hover {
   cursor: pointer;
   transition: 0.3s ease;
 }
+
 @media (hover: hover) and (pointer: fine) {
+
   #prev:hover,
   #next:hover {
     color: var(--dark_color);
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
   }
 }
+
 .remove,
 .randomize {
   outline: none !important;
@@ -583,7 +800,9 @@ nav a:hover {
   cursor: pointer;
   box-shadow: 0 3px rgba(0, 0, 0, 0.1);
 }
+
 @media (hover: hover) and (pointer: fine) {
+
   .remove:hover,
   .randomize:hover {
     background-color: var(--white_color);
@@ -591,7 +810,6 @@ nav a:hover {
     box-shadow: 4px 4px rgba(0, 0, 0, 0.15);
   }
 }
-/* TV SHOW OUTPUT CARDS END*/
 
 /* NOTIFICATIONS */
 
@@ -644,9 +862,10 @@ nav a:hover {
   }
 }
 
-/* TABLET STYLES */
+/* ========== TABLET STYLES ========== */
 
 @media screen and (min-width: 700px) {
+
   /* applies to screens wider than 699px */
   .nav-toggle-label {
     display: none;
@@ -667,7 +886,6 @@ nav a:hover {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    height: 4rem;
   }
 
   nav ul {
@@ -690,7 +908,7 @@ nav a:hover {
     height: 5px;
     background: var(--hover);
     position: absolute;
-    top: -0.75em;
+    top: -0.35em;
     left: 0;
     right: 0;
     transform: scale(0, 1);
@@ -700,11 +918,34 @@ nav a:hover {
   nav a:hover::before {
     transform: scale(1, 1);
   }
+
+  .pContainer {
+    max-width: 85%;
+    top: 55%;
+  }
+
+  h4 {
+    font-size: 2.5rem;
+  }
+
+  /* Details Page */
+  .tvShowRow .card_img {
+    width: 33%;
+  }
+
+  .tvShowRow .tvShowDetails {
+    width: 66%;
+  }
+
+  .castsRow .actorCard {
+    width: 30%;
+  }
 }
 
 /* DESKTOP STYLES */
 
 @media screen and (min-width: 1024px) {
+
   /* applies to screens wider than 999px */
   .card {
     height: 500px;
@@ -717,17 +958,15 @@ nav a:hover {
   .card .overlay {
     height: 100%;
     /* gradient on overlay */
-    background: linear-gradient(
-      hsl(0 0% 0% / 0),
-      hsl(0 0% 0% / 0.3) 20%,
-      hsl(0 0% 0% / 1)
-    );
+    background: linear-gradient(hsl(0 0% 0% / 0),
+        hsl(0 0% 0% / 0.3) 20%,
+        hsl(0 0% 0% / 1));
     transform: translateY(33%);
     transition: transform 0.5s ease;
   }
 
   /* hide all except the title */
-  .tvShow > *:not(.card-title) {
+  .tvShow>*:not(.card-title) {
     opacity: 0;
     transition: opacity 0.5s ease-in;
   }
@@ -743,14 +982,14 @@ nav a:hover {
   .card:hover .overlay,
   .card:focus-within .overlay {
     transform: translateY(0);
-    transition-delay: 0.5s;
+    transition-delay: 0.4s;
   }
 
   /* show the series details. Focus-within is for having the focus on the inside elements, like tabbing with keyboard. */
-  .card:hover .tvShow > *:not(.card-title),
-  .card:focus-within .tvShow > *:not(.card-title) {
+  .card:hover .tvShow>*:not(.card-title),
+  .card:focus-within .tvShow>*:not(.card-title) {
     opacity: 1;
-    transition-delay: 1s;
+    transition-delay: 0.7s;
   }
 
   /* green line of title starts from the left */
@@ -772,7 +1011,7 @@ nav a:hover {
 
   /* "heart" and "trash" buttons should appeared after the delay */
   .card:hover .addBtn i {
-    transition-delay: 0.5s;
+    transition-delay: 0.4s;
   }
 
   .card .card_img img {
@@ -783,5 +1022,14 @@ nav a:hover {
   .card .card_img {
     height: 500px;
     overflow: hidden;
+  }
+
+  .pContainer {
+    max-width: 70%;
+    top: 60%;
+  }
+
+  .castsRow .actorCard {
+    width: 25%;
   }
 }
