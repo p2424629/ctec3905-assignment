@@ -4,6 +4,7 @@ import { API_KEY, API_URL, IMG_URL, POSTER_SIZE } from './config.js';
 
 // Take the user to detailed tv show info page.
 const showSelected = async (event) => {
+  event.preventDefault();
   sessionStorage.setItem('showId', event.currentTarget.showId);
   window.open(
     `../pages/shows-page.html?showId=${event.currentTarget.showId}`,
@@ -89,6 +90,13 @@ const removeFavorite = (id) => {
   setTimeout(() => {
     if (document.URL.includes('favorites')) window.location.reload();
   }, 1600);
+};
+
+const tweet = (title) => {
+  const windowFeatures =
+    'location=yes,height=300,width=550,scrollbars=yes,status=yes';
+  const url = `https://twitter.com/intent/tweet?text=Going to watch "${title}" . Created for &hashtags=CTEC3905,DMU`;
+  window.open(url, '_blank', windowFeatures);
 };
 
 async function getData(url) {
@@ -190,18 +198,19 @@ const createImg = (poster_path, name) => {
   const imgSrc = document.createElement('img');
   imgSrc.src = poster_path
     ? `${IMG_URL}${POSTER_SIZE}${poster_path}`
-    : '../images/image-not-found.jpg';
+    : './images/image-not-found.jpg';
   imgSrc.alt = name;
   imgContainer.appendChild(imgSrc);
   return imgContainer;
 };
 
-export const buildResults = (obj, loc = '') => {
+export const buildResults = (obj) => {
   try {
-    const seriesInfo = document.getElementById('tvShows');
+    let seriesInfo = document.getElementById('tvShows');
+
     const { id, name, vote_average, first_air_date, poster_path } = obj;
     const showItem = createShowItem(id, name, vote_average, first_air_date);
-    const addBtn = createAddBtn(id, loc);
+    const addBtn = createAddBtn(id);
     const overlay = document.createElement('div');
     overlay.classList.add('overlay');
     overlay.append(addBtn, showItem);
@@ -209,74 +218,58 @@ export const buildResults = (obj, loc = '') => {
     const card = document.createElement('div');
     card.classList.add('card');
     card.append(overlay, img);
+    if (!seriesInfo) {
+      seriesInfo = document.createElement('div');
+      seriesInfo.id = 'tvShow';
+    }
     seriesInfo.appendChild(card);
     hideSpinner();
+    return seriesInfo;
   } catch (error) {
     throw new Error(error);
   }
 };
 
-export const buildShowResults = (showInfo, videoUrl, actors, externals) => {
-  try {
-    const main = document.querySelector('.main-details');
+const castRowProcess = (actors) => {
+  const title = document.createElement('h4');
+  title.textContent = 'Top Cast Actors';
 
-    // Creating Rows for show details.
-    const tvShowRow = document.createElement('div');
-    tvShowRow.classList.add('tvShowRow');
-    const castsRow = document.createElement('div');
-    castsRow.classList.add('castsRow');
-    const trailerRow = document.createElement('div');
-    trailerRow.classList.add('trailerRow');
-    const recommendationRow = document.createElement('div');
-    recommendationRow.classList.add('recommendationRow');
+  const actorsCards = actors.splice(0, 8).map((ele) => {
+    const img = ele.picture
+      ? `${IMG_URL}w300${ele.picture}`
+      : './images/image-not-found.jpg';
+    const actorCard = document.createElement('div');
+    actorCard.classList.add('actorCard', 'col');
+    const cardPanel = document.createElement('div');
+    cardPanel.classList.add('cardPanel');
+    const actorImg = document.createElement('img');
+    actorImg.classList.add('actorImg');
+    actorImg.src = img;
+    actorImg.alt = `${ele.name}-poster`;
+    const actorName = document.createElement('h6');
+    actorName.classList.add('actorName');
+    const smallSpan = document.createElement('span');
+    const charName = document.createElement('h6');
+    charName.classList.add('charName');
+    if (ele.character) {
+      actorName.textContent = ele.name;
+      smallSpan.textContent = 'AS';
+      charName.textContent = ele.character;
+      cardPanel.append(actorImg, actorName, smallSpan, charName);
+    } else {
+      actorName.textContent = ele.name;
+      cardPanel.append(actorImg, actorName);
+    }
+    actorCard.appendChild(cardPanel);
+    return actorCard;
+  });
 
-    const [posterContainer, tvShowDetailsContainer] = detailsTvInfo(showInfo);
-
-    const title = document.createElement('h4');
-    title.textContent = 'Top Cast Actors';
-
-    const actorsToShow = actors.splice(0, 8).map((ele) => {
-      const img = ele.picture
-        ? `${IMG_URL}w300${ele.picture}`
-        : '..images/image-not-found.jpg';
-      const actorCard = document.createElement('div');
-      actorCard.classList.add('actorCard', 'col');
-      const cardPanel = document.createElement('div');
-      cardPanel.classList.add('cardPanel');
-      const actorImg = document.createElement('img');
-      actorImg.classList.add('actorImg');
-      actorImg.src = img;
-      actorImg.alt = `${ele.name}-poster`;
-      const actorName = document.createElement('h6');
-      actorName.classList.add('actorName');
-      const smallSpan = document.createElement('span');
-      const charName = document.createElement('h6');
-      charName.classList.add('charName');
-      if (ele.character) {
-        actorName.textContent = ele.name;
-        smallSpan.textContent = 'AS';
-        charName.textContent = ele.character;
-        cardPanel.append(actorImg, actorName, smallSpan, charName);
-      } else {
-        actorName.textContent = ele.name;
-        cardPanel.append(actorImg, actorName);
-      }
-      actorCard.appendChild(cardPanel);
-      return actorCard;
-    });
-
-    castsRow.append(title, ...actorsToShow);
-    // Appending elements to rows.
-    tvShowRow.append(posterContainer, tvShowDetailsContainer);
-    // main.append(tvShowRow, castsRow, trailerRow, recommendationRow);
-    main.append(tvShowRow, castsRow);
-    hideSpinner();
-  } catch (error) {
-    throw new Error(error);
-  }
+  const actorsContainer = document.createElement('div');
+  actorsContainer.classList.add('actorsContainer');
+  actorsContainer.append(...actorsCards);
+  return [title, actorsContainer];
 };
-
-const detailsTvInfo = (showInfo) => {
+const detailsTvInfo = (showInfo, externals) => {
   // Creating elements for tvShowRow.
 
   // Genres and Poster
@@ -309,18 +302,60 @@ const detailsTvInfo = (showInfo) => {
   const runtime = document.createElement('h6');
   const runtimeCont = document.createElement('span');
   runtime.textContent = 'Runtime: ';
-  runtimeCont.textContent = showInfo.episode_run_time[0];
+  runtimeCont.textContent = `${showInfo.episode_run_time[0]} min.`;
   runtime.appendChild(runtimeCont);
+
   const genre = document.createElement('h6');
   genre.textContent = 'Genres: ';
   const genreCont = document.createElement('span');
   genreCont.textContent = genres;
   genre.appendChild(genreCont);
+
   const releaseDate = document.createElement('h6');
   releaseDate.textContent = 'Release date: ';
   const releaseCont = document.createElement('span');
   releaseCont.textContent = showInfo.first_air_date;
   releaseDate.appendChild(releaseCont);
+
+  const rating = document.createElement('h6');
+  rating.textContent = 'Rating: ';
+  const ratingCont = document.createElement('span');
+  ratingCont.textContent = `${showInfo.vote_average} / 10 `;
+  const ratingCont2 = document.createElement('span');
+  ratingCont2.textContent = `(${showInfo.vote_count} votes)`;
+  ratingCont2.classList.add('smallText');
+  rating.append(ratingCont, ratingCont2);
+
+  const numEpisodes = document.createElement('h6');
+  numEpisodes.textContent = 'Number of episodes: ';
+  const numEpisodesCont = document.createElement('span');
+  numEpisodesCont.textContent = showInfo.number_of_episodes;
+  numEpisodes.appendChild(numEpisodesCont);
+
+  const numSeasons = document.createElement('h6');
+  numSeasons.textContent = 'Number of seasons: ';
+  const numSeasonsCont = document.createElement('span');
+  numSeasonsCont.textContent = showInfo.number_of_seasons;
+  numSeasons.appendChild(numSeasonsCont);
+
+  const latestEpisodeToAir = document.createElement('h6');
+  latestEpisodeToAir.textContent = 'Latest Episode: ';
+  const latestEpisodeToAirCont = document.createElement('span');
+  latestEpisodeToAirCont.textContent = `${
+    showInfo.last_episode_to_air.air_date
+  } - "${
+    showInfo.last_episode_to_air.name
+      ? showInfo.last_episode_to_air.name
+      : 'Unknown'
+  }".`;
+  latestEpisodeToAir.appendChild(latestEpisodeToAirCont);
+
+  const status = document.createElement('h6');
+  status.textContent = 'Status: ';
+  const statusCont = document.createElement('span');
+  statusCont.textContent = showInfo.status;
+  status.appendChild(statusCont);
+
   const homepage = document.createElement('h6');
   homepage.textContent = 'Home page: ';
   const homepageCont = document.createElement('a');
@@ -330,23 +365,155 @@ const detailsTvInfo = (showInfo) => {
   homepage.appendChild(homepageCont);
 
   // Overview of Tv Show
+  const overviewTitle = document.createElement('h6');
+  overviewTitle.textContent = 'Plot:';
   const overview = document.createElement('p');
   overview.textContent = showInfo.overview;
+
+  // Buttons
+  const buttonsCont = buttons(showInfo, externals);
   tvShowDetails.append(
     title,
     blockQuote,
+    rating,
     runtime,
     genre,
     releaseDate,
+    numEpisodes,
+    numSeasons,
+    latestEpisodeToAir,
+    status,
     homepage,
+    buttonsCont,
+    overviewTitle,
     overview
   );
 
   // Buttons
-  const buttons = document.createElement('div');
-  tvShowDetailsContainer.append(tvShowDetails, buttons);
+  tvShowDetailsContainer.append(tvShowDetails);
 
   return [posterContainer, tvShowDetailsContainer];
+};
+
+const trailerProcess = (videoUrl) => {
+  const trailerTitle = document.createElement('h4');
+  trailerTitle.textContent = 'Trailer';
+  const videoContainer = document.createElement('div');
+  videoContainer.classList.add('videoContainer');
+  if (!videoUrl || videoUrl.results.length === 0) {
+    const noTrailer = document.createElement('p');
+    noTrailer.textContent = 'No video available';
+    noTrailer.classList.add('trailer_error');
+    videoContainer.appendChild(noTrailer);
+    return [trailerTitle, videoContainer];
+  }
+  const trailers = videoUrl.results.filter(
+    (ele) => ele.site === 'YouTube' && ele.type.includes('Trailer')
+  );
+  // Get random Trailer.
+  let min = 0;
+  let max = trailers.length - 1;
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  const trailerNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+  const trailerIframe = document.createElement('iframe');
+  const url = `https://www.youtube.com/embed/${trailers[trailerNumber].key}`;
+  trailerIframe.src = url;
+  trailerIframe.setAttribute('allowfullscreen', '');
+  videoContainer.appendChild(trailerIframe);
+
+  return [trailerTitle, videoContainer];
+};
+
+const buttons = (showInfo, externals) => {
+  // IMDB link.
+  const buttonsCont = document.createElement('div');
+  buttonsCont.classList.add('buttons');
+
+  const imdb = document.createElement('a');
+  imdb.href = `https://www.imdb.com/title/${externals.imdb_id}`;
+  imdb.target = '_blank';
+  imdb.text = 'IMDB Link';
+  const addToFavorites = document.createElement('a');
+  addToFavorites.classList.add('favorite');
+  addToFavorites.addEventListener('click', () => {
+    addFavorite(showInfo.id);
+  });
+  addToFavorites.text = 'Add to Favorites';
+  const twitter = document.createElement('a');
+  twitter.classList.add('twitter-share-button', 'twitter');
+  twitter.addEventListener('click', () => {
+    tweet(showInfo.name);
+  });
+
+  buttonsCont.append(imdb, addToFavorites, twitter);
+  return buttonsCont;
+};
+
+const recommendationsProcess = (recommendations) => {
+  const recommendationsTitle = document.createElement('h4');
+  recommendationsTitle.textContent = 'Recommendations';
+  const recommendationsCont = document.createElement('div');
+  recommendationsCont.classList.add('recommendations');
+  if (!recommendations || recommendations.results.length === 0) {
+    const noRecommendations = document.createElement('h6');
+    noRecommendations.textContent =
+      'Sorry! No recommendations for this Tv Show for now.';
+    recommendationsCont.appendChild(noRecommendations);
+    return [recommendationsTitle, recommendationsCont];
+  }
+  recommendations.results.splice(0, 8).forEach((ele) => {
+    const node = buildResults(ele);
+    recommendationsCont.appendChild(node);
+  });
+  return [recommendationsTitle, recommendationsCont];
+};
+
+export const buildShowResults = (
+  showInfo,
+  videoUrl,
+  actors,
+  externals,
+  recommendations
+) => {
+  try {
+    const main = document.querySelector('.main-details');
+    clear(main);
+    // Creating Rows for show details.
+    const tvShowRow = document.createElement('div');
+    tvShowRow.classList.add('tvShowRow');
+    const castsRow = document.createElement('div');
+    castsRow.classList.add('castsRow');
+    const trailerRow = document.createElement('div');
+    trailerRow.classList.add('trailerRow');
+    const recommendationRow = document.createElement('div');
+    recommendationRow.classList.add('recommendationRow');
+
+    // Show info.
+    const [posterContainer, tvShowDetailsContainer] = detailsTvInfo(
+      showInfo,
+      externals
+    );
+
+    // Casts of tv show.
+    const [castTitle, actorsContainer] = castRowProcess(actors);
+    // Trailer.
+    const [trailerTitle, trailer] = trailerProcess(videoUrl);
+
+    // Recommendations.
+    const [recommendationsTitle, recommendationsCont] =
+      recommendationsProcess(recommendations);
+    // Appending elements to rows.
+    tvShowRow.append(posterContainer, tvShowDetailsContainer);
+    castsRow.append(castTitle, actorsContainer);
+    trailerRow.append(trailerTitle, trailer);
+    recommendationRow.append(recommendationsTitle, recommendationsCont);
+    // main.append(tvShowRow, castsRow, trailerRow, recommendationRow);
+    main.append(tvShowRow, castsRow, trailerRow, recommendationRow);
+    hideSpinner();
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 export const infoText = (msg, parent) => {
@@ -358,11 +525,13 @@ export const infoText = (msg, parent) => {
 };
 
 export const errorHandling = (ev) => {
-  const errorMessage = document.getElementById('error');
+  const errorDiv = document.querySelector('.errors');
+  if (errorDiv) clear(errorDiv);
   const infoTxt = document.querySelector('.infoText');
   if (infoTxt) infoTxt.remove();
-  if (errorMessage) errorMessage.textContent = '';
+  const errorMsg = document.createElement('p');
   hideSpinner();
-  errorMessage.textContent = ev.reason ? ev.reason : ev;
-  errorMessage.classList.add('error', 'active');
+  errorMsg.textContent = ev.reason ? ev.reason : ev;
+  errorDiv.appendChild(errorMsg);
+  errorDiv.classList.add('active');
 };

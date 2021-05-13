@@ -13,28 +13,24 @@ import {
   hideSpinner,
 } from './functions.js';
 
-import {
-  API_KEY,
-  API_URL,
-} from './config.js';
+import { API_KEY, API_URL } from './config.js';
 
 const seriesInfo = document.getElementById('tvShows');
 const main = document.querySelector('.main');
 const removeAllTvShows = document.getElementById('removeAllTvShows');
 const randomTvShows = document.getElementById('randomTvShows');
-
 async function recommendTvShows() {
-  // Get random year on each call, between 2000 - current year.
+  // random year on each refresh between 2000 - current year.
   const minYear = 2000;
   const maxYear = new Date().getFullYear();
   const recommendedYear =
     Math.floor(Math.random() * (maxYear - minYear + 1)) + minYear;
 
-  // Get random page on each call.
+  // Get random page on each refresh.
   const minPage = 1;
   const maxPage = 10;
   const recommendedPage = Math.floor(
-    Math.random() * (maxPage - minPage + 1) + minPage,
+    Math.random() * (maxPage - minPage + 1) + minPage
   );
   const url = `${API_URL}discover/tv?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&
   first_air_date_year=${recommendedYear}&page=${recommendedPage}&
@@ -66,7 +62,7 @@ const onFirstLoad = async () => {
     favoriteTvShows.forEach(async (id) => {
       try {
         const obj = await getObject(null, id);
-        buildResults(obj, 'favorites');
+        buildResults(obj);
       } catch (error) {
         errorHandling(error);
       }
@@ -77,7 +73,7 @@ const onFirstLoad = async () => {
     randomTvShows.style.display = 'block';
     infoText(
       'There are no favorite tv shows stored! Go watch some. Here are some recommendations',
-      document.querySelector('.pageTitle'),
+      document.querySelector('.pageTitle')
     );
     recommendTvShows();
   }

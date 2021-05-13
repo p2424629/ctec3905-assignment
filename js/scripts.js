@@ -1,8 +1,6 @@
 /* eslint-disable import/extensions */
 // /* eslint-disable */
-import {
-  IMG_URL
-} from './config.js';
+import { IMG_URL } from './config.js';
 import {
   scrollToTopHandle,
   hideMenu,
@@ -19,6 +17,8 @@ const pages = document.querySelector('.pages');
 const next = document.getElementById('next');
 const prev = document.getElementById('prev');
 const main = document.querySelector('.main');
+const pageIndicator = document.getElementById('pageNumber');
+
 // Display the tv-shows.
 async function createOutput(pageNumber) {
   clear(seriesInfo);
@@ -29,7 +29,7 @@ async function createOutput(pageNumber) {
       buildResults(show);
     });
     hideSpinner();
-
+    pageIndicator.textContent = pageNumber;
     randomImg(obj);
     // Show the pages buttons after tvShows are listed.
     const totalPages = obj.total_pages;
@@ -47,19 +47,17 @@ async function createOutput(pageNumber) {
     }
   } catch (error) {
     errorHandling(error);
-    console.log(error);
   }
 }
 
 const onFirstLoad = async () => {
   // Set the page number parameter on the url
   const url = new URL(window.location.href);
-  const page = url.searchParams.get('page');
-  if (!page) {
-    url.searchParams.set('page', 1);
-    window.history.replaceState(null, null, url);
-    return createOutput(1);
-  }
+  let page = url.searchParams.get('page');
+  if (page <= 0) page = 1;
+  if (!page) page = 1;
+  url.searchParams.set('page', page);
+  window.history.replaceState(null, null, url);
   return createOutput(page);
 };
 
@@ -115,7 +113,9 @@ let pageNum = 1;
 // Get "prev" id and goes backwards one page.
 prev.addEventListener('click', () => {
   pageNum -= 1;
+  if (pageNum <= 0) pageNum = 1;
   window.scrollTo(0, 0);
+  pageIndicator.textContent = pageNum;
   addPageToUrl(pageNum);
   createOutput(pageNum);
 });
@@ -124,6 +124,7 @@ prev.addEventListener('click', () => {
 next.addEventListener('click', () => {
   pageNum += 1;
   window.scrollTo(0, 0);
+  pageIndicator.textContent = pageNum;
   addPageToUrl(pageNum);
   createOutput(pageNum);
 });

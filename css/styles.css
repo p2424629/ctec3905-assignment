@@ -10,8 +10,15 @@
   --dark_color: rgba(68, 68, 68, 0.8);
   --red_color: #e1302a;
   --hover: rgba(0, 214, 170, 0.85);
+  --blue_color: #00aced;
 }
 
+/* Hide the buttons that load before logic */
+.remove,
+.randomize,
+.errors {
+  display: none;
+}
 /* WHOLE PAGE */
 
 *,
@@ -30,8 +37,9 @@ body {
 }
 
 a {
+  outline: none !important;
   text-decoration: none;
-  color: #2f3640;
+  color: var(--background_color);
 }
 
 /* SCROLL TO TOP BUTTON */
@@ -58,7 +66,7 @@ a {
   color: var(--white_color);
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) {
   .scrollToTop:hover {
     background-color: var(--white_color);
   }
@@ -123,20 +131,16 @@ a {
 
 /* Error */
 
-.error {
-  display: none;
-}
-
-.error.active {
+.errors.active {
   font-family: 'Montserrat Black', Arial, Helvetica, sans-serif;
-  font-size: 40px;
   text-transform: uppercase;
   color: red;
-  text-align: center;
   animation: fadeIn 2s;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  word-break: break-word;
+  width: 100vw;
+  position: absolute;
+  top: 30%;
 }
 
 /* ========== Global parameters. - END ========== */
@@ -157,7 +161,6 @@ header {
 }
 
 .logo {
-  font-family: 'Montserrat', sans-serif;
   color: var(--white_color);
   padding: 1rem;
   width: 200px;
@@ -276,11 +279,11 @@ nav a:hover {
   color: var(--hover);
 }
 
-.nav-toggle:checked~nav {
+.nav-toggle:checked ~ nav {
   transform: scale(1, 1);
 }
 
-.nav-toggle:checked~nav a {
+.nav-toggle:checked ~ nav a {
   opacity: 1;
   transition: opacity 250ms ease-in-out 250ms;
 }
@@ -304,10 +307,13 @@ nav a:hover {
 }
 
 .randomImage {
-  background: linear-gradient(to bottom,
-      rgba(0, 0, 0, 0) 39%,
-      rgba(0, 0, 0, 0) 41%,
-      rgba(0, 0, 0, 0.65) 100%),
+  /* Passing the url variable from JS dynamically. CSS validator complains */
+  background: linear-gradient(
+      to bottom,
+      hsl(0 0% 0% / 0) 39%,
+      hsl(0 0% 0% / 0) 41%,
+      hsl(0 0% 0% / 0.65) 100%
+    ),
     var(--url);
   background-position: center center !important;
   background-repeat: no-repeat !important;
@@ -339,10 +345,9 @@ nav a:hover {
 }
 
 h4 {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   line-height: 110%;
   margin: 1.5rem 0 1rem 0;
-  font-weight: 400;
 }
 
 .randomParagraph {
@@ -383,8 +388,9 @@ h4 {
 
 .card {
   --padding: 1.5rem;
-  height: 400px;
-  width: 280px;
+  --height: 100%;
+  height: var(--height);
+  width: 350px;
   position: relative;
   transition: transform 500ms ease;
   z-index: 2;
@@ -399,7 +405,7 @@ h4 {
   top: 0;
   left: 0;
   width: 100%;
-  height: 400px;
+  height: var(--height);
   transition: 0.3s ease-in-out;
   background-color: rgba(0, 0, 0, 0.4);
 }
@@ -486,7 +492,9 @@ h4 {
   content: '';
   position: absolute;
   height: 4px;
-  width: calc(100% + var(--padding));
+  width: calc(
+    100% + var(--padding)
+  ); /*Passing a scope variable. CSS validator again complains.*/
   left: calc(var(--padding) * -1);
   bottom: 0;
   background: var(--hover);
@@ -495,16 +503,13 @@ h4 {
 
 .card .card_img img {
   width: 100%;
-  height: 400px;
-  z-index: 2;
   object-fit: cover;
-  transition: 0.3s ease-out;
 }
 
-.card .card_img {
-  height: 400px;
-  z-index: 2;
-  transition: 0.2s ease-out;
+.card .card_img,
+.card_img img {
+  height: var(--height);
+  transition: 0.3s ease-out;
 }
 
 .card .addBtn {
@@ -514,7 +519,7 @@ h4 {
   display: flex;
 }
 
-.card .addBtn>* {
+.card .addBtn > * {
   margin: 0 3px;
 }
 
@@ -581,14 +586,13 @@ h4 {
 /* TV SHOWS DETAILS PAGE - START */
 .main-details {
   display: block;
-  width: 85%;
+  width: 95%;
   margin: 0 auto;
   max-width: 1280px;
 }
 
 .col {
   float: left;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   padding: 0 0.75rem;
   min-height: 1px;
@@ -613,12 +617,9 @@ h4 {
 }
 
 .tvShowRow .card_img {
-  /* display: flex;
-  justify-content: center; */
+  display: flex;
+  justify-content: center;
   width: 100%;
-  margin-left: auto;
-  left: auto;
-  right: auto;
   transition: 0.5s ease-in-out;
 }
 
@@ -633,23 +634,73 @@ h4 {
 .tvShowRow .card_img img {
   max-width: 100%;
   height: auto;
-  display: block;
-  cursor: zoom-in;
   position: relative;
-  transition: opacity 0.4s;
-  backface-visibility: hidden;
 }
 
-h3 {
-  font-family: 'Montserrat SemiBold', Arial, Helvetica, sans-serif;
-  font-size: 4.5ch;
-  line-height: 110%;
-  margin: 0 0 1.2rem 0;
+/* Buttons */
+.buttons {
+  display: flex;
+  justify-content: flex-start;
+  margin: 1rem 0 1rem 0;
+  width: 100%;
+}
+.buttons a {
+  font-family: 'Montserrat Medium', Arial, Helvetica, sans-serif;
+  font-size: 2ch;
+  padding: 0.5rem;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  border-radius: 1px;
+  border: 1px solid #31313125;
+  color: var(--dark_color);
+  text-align: center;
+  transition: 0.2s ease;
+}
+.buttons > * {
+  margin: 0 0.4em 0 0;
+  cursor: pointer;
+}
+
+.twitter::before {
+  display: block;
+  content: '\f243';
+  font-family: 'Ionicons';
+  transition: 0.2s;
+  font-size: 1.8ch;
+}
+.buttons .twitter {
+  display: block;
+  background-color: white;
+  color: var(--blue_color);
+  width: 3rem;
+  overflow: hidden;
+}
+.buttons a:hover {
+  background-color: var(--background_color);
+  color: white;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 8px;
+}
+.buttons .twitter:hover {
+  background-color: var(--blue_color);
+}
+.buttons .twitter:hover::before {
+  color: white;
 }
 
 .main-details h4 {
   font-family: 'Montserrat SemiBold', Arial, Helvetica, sans-serif;
   padding: 0 0.75rem;
+}
+.smallText {
+  font-size: 1ch;
+  color: var(--dark_color);
+  font-family: 'Montserrat SemiBold';
+}
+h3 {
+  font-family: 'Montserrat SemiBold', Arial, Helvetica, sans-serif;
+  font-size: 4.3ch;
+  line-height: 110%;
+  margin: 0 0 1.2rem 0;
 }
 
 h6 {
@@ -657,7 +708,7 @@ h6 {
   font-weight: bolder;
   font-size: 1.15rem;
   line-height: 110%;
-  margin: 0.8rem 0 0.5rem 0;
+  margin: 0.5rem 0 0.5rem 0;
 }
 
 h6 span {
@@ -666,11 +717,10 @@ h6 span {
 }
 
 h6 a {
-  color: #039be5;
+  color: var(--blue_color);
 }
 
 blockquote {
-  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
   font-style: italic;
   margin: 20px 0;
   padding-left: 1.5rem;
@@ -683,21 +733,32 @@ blockquote p {
 }
 
 .castsRow .actorCard {
-  width: 50%;
-  margin-left: auto;
   text-align: center;
+}
+.actorsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  grid-gap: 0.5rem;
+}
+.recommendations {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  grid-gap: 1rem;
+  margin-right: 1.7rem;
+}
+
+.recommendations .card,
+.recommendations .overlay,
+.recommendations .card_img {
+  width: 100%;
 }
 
 .cardPanel {
   max-height: 370px;
   min-height: 320px;
-  transition: box-shadow 0.25s, -webkit-box-shadow 0.25s;
-  padding: 24px;
-  margin: 0.5rem 0 1rem 0;
+  padding: 0.7rem;
   border-radius: 2px;
-  background-color: #fff;
-  -webkit-transition: -webkit-box-shadow 0.25s;
-  transition: -webkit-box-shadow 0.25s;
+  background-color: var(--white_color);
   transition: box-shadow 0.25s;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
     0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
@@ -705,14 +766,10 @@ blockquote p {
 }
 
 .cardPanel img {
-  max-width: 100%;
-  height: auto;
-  max-height: 156px;
+  max-height: 215px;
+  max-width: 90%;
   border-style: none;
-  -webkit-transition: -webkit-box-shadow 0.25s;
-  transition: -webkit-box-shadow 0.25s;
   transition: box-shadow 0.25s;
-  transition: box-shadow 0.25s, -webkit-box-shadow 0.25s;
   text-align: center;
 }
 
@@ -720,12 +777,32 @@ blockquote p {
 .charName,
 .cardPanel span {
   font-family: 'Montserrat SemiBold', Arial, Helvetica, sans-serif;
-  display: block;
-  width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: center;
+}
+
+.trailer_error {
+  font-size: 30px;
+  text-align: center;
+}
+
+.videoContainer {
+  padding-bottom: 56.25%;
+  position: relative;
+  width: 100%;
+  height: 0;
+  overflow: hidden;
+}
+.videoContainer iframe,
+embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 
 /* ========== TV SHOWS STYLES END ========== */
@@ -755,31 +832,41 @@ blockquote p {
 
 #prev,
 #next {
-  margin: 1em 1.7em;
+  margin: 1em 0.3em;
   font-size: 2ch;
   font-weight: bold;
   font-family: 'Montserrat Black', Arial, Helvetica, sans-serif;
   border: none;
   border-radius: 0.2em;
   background-color: white;
-  box-shadow: 0 3px rgba(0, 0, 0, 0.1);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   color: var(--background_color);
   width: auto;
   padding: 0 0.5rem;
   height: 2em;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   cursor: pointer;
   transition: 0.3s ease;
 }
-
-@media (hover: hover) and (pointer: fine) {
-
+#pageNumber {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #9e9e9e;
+  border-radius: 0;
+  outline: none;
+  height: 2.5rem;
+  font-size: 2.5ch;
+  padding: 0;
+  background-color: var(--hover);
+  font-weight: bold;
+  font-family: 'Montserrat Black', Arial, Helvetica, sans-serif;
+  width: 50px;
+}
+@media (hover: hover) {
   #prev:hover,
   #next:hover {
     color: var(--dark_color);
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 15px;
   }
 }
 
@@ -798,16 +885,15 @@ blockquote p {
   font-size: 1rem;
   transition: 0.25s;
   cursor: pointer;
-  box-shadow: 0 3px rgba(0, 0, 0, 0.1);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
-@media (hover: hover) and (pointer: fine) {
-
+@media (hover: hover) {
   .remove:hover,
   .randomize:hover {
     background-color: var(--white_color);
     color: var(--background_color);
-    box-shadow: 4px 4px rgba(0, 0, 0, 0.15);
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 8px;
   }
 }
 
@@ -825,7 +911,7 @@ blockquote p {
   left: 1em;
   bottom: -3em;
   opacity: 0;
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.35);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 8px;
 }
 
 #alreadyStored {
@@ -865,15 +951,21 @@ blockquote p {
 /* ========== TABLET STYLES ========== */
 
 @media screen and (min-width: 700px) {
-
   /* applies to screens wider than 699px */
+
+  .card,
+  .card .card_img,
+  .card_img img {
+    height: var(--height);
+    width: 280px;
+  }
   .nav-toggle-label {
     display: none;
   }
 
   header {
     display: grid;
-    grid-template-columns: 1fr auto minmax(600px, 3fr) 1fr;
+    grid-template-columns: 1fr auto minmax(600px, 3fr) 1fr; /*1fr force the first child, auto for 2nd, stretch 3rd as 3fr and min 600px, 1fr force 4th*/
   }
 
   .logo {
@@ -881,7 +973,13 @@ blockquote p {
   }
 
   nav {
-    all: unset;
+    transition: none;
+    text-align: left;
+    transform: scale(1, 1);
+    position: relative;
+    left: initial;
+    top: initial;
+    background: none;
     grid-column: 3 / 4;
     display: flex;
     justify-content: flex-end;
@@ -919,9 +1017,10 @@ blockquote p {
     transform: scale(1, 1);
   }
 
+  /* Random image */
   .pContainer {
     max-width: 85%;
-    top: 55%;
+    top: 50%;
   }
 
   h4 {
@@ -931,42 +1030,44 @@ blockquote p {
   /* Details Page */
   .tvShowRow .card_img {
     width: 33%;
+    display: block; /* Keep image align on left until mobile */
   }
 
   .tvShowRow .tvShowDetails {
     width: 66%;
   }
 
-  .castsRow .actorCard {
-    width: 30%;
+  .recommendations .card,
+  .recommendations .overlay,
+  .recommendations .card_img {
+    width: 100%;
   }
 }
 
 /* DESKTOP STYLES */
 
 @media screen and (min-width: 1024px) {
-
   /* applies to screens wider than 999px */
   .card {
-    height: 500px;
-    width: 300px;
     position: relative;
     z-index: 2;
     transition: 0.4s ease;
   }
 
   .card .overlay {
-    height: 100%;
+    /* height: 100%; */
     /* gradient on overlay */
-    background: linear-gradient(hsl(0 0% 0% / 0),
-        hsl(0 0% 0% / 0.3) 20%,
-        hsl(0 0% 0% / 1));
+    background: linear-gradient(
+      hsl(0 0% 0% / 0),
+      hsl(0 0% 0% / 0.4) 20%,
+      hsl(0 0% 0% / 1)
+    );
     transform: translateY(33%);
     transition: transform 0.5s ease;
   }
 
   /* hide all except the title */
-  .tvShow>*:not(.card-title) {
+  .tvShow > *:not(.card-title) {
     opacity: 0;
     transition: opacity 0.5s ease-in;
   }
@@ -986,10 +1087,10 @@ blockquote p {
   }
 
   /* show the series details. Focus-within is for having the focus on the inside elements, like tabbing with keyboard. */
-  .card:hover .tvShow>*:not(.card-title),
-  .card:focus-within .tvShow>*:not(.card-title) {
+  .card:hover .tvShow > *:not(.card-title),
+  .card:focus-within .tvShow > *:not(.card-title) {
     opacity: 1;
-    transition-delay: 0.7s;
+    transition-delay: 0.5s;
   }
 
   /* green line of title starts from the left */
@@ -1014,22 +1115,27 @@ blockquote p {
     transition-delay: 0.4s;
   }
 
-  .card .card_img img {
-    height: 500px;
+  .card,
+  .card .card_img,
+  .card_img img {
+    width: 300px;
     overflow: hidden;
   }
 
-  .card .card_img {
-    height: 500px;
-    overflow: hidden;
-  }
-
+  /* Random image */
   .pContainer {
-    max-width: 70%;
-    top: 60%;
+    max-width: 75%;
+    top: 50%;
   }
 
-  .castsRow .actorCard {
-    width: 25%;
+  .recommendations .card,
+  .recommendations .overlay,
+  .recommendations .card_img {
+    width: 100%;
+  }
+
+  /* Details Page */
+  .main-details {
+    width: 85%;
   }
 }
