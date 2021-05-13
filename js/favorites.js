@@ -30,7 +30,7 @@ async function recommendTvShows() {
   const minPage = 1;
   const maxPage = 10;
   const recommendedPage = Math.floor(
-    Math.random() * (maxPage - minPage + 1) + minPage
+    Math.random() * (maxPage - minPage + 1) + minPage,
   );
   const url = `${API_URL}discover/tv?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&
   first_air_date_year=${recommendedYear}&page=${recommendedPage}&
@@ -73,7 +73,7 @@ const onFirstLoad = async () => {
     randomTvShows.style.display = 'block';
     infoText(
       'There are no favorite tv shows stored! Go watch some. Here are some recommendations',
-      document.querySelector('.pageTitle')
+      document.querySelector('.pageTitle'),
     );
     recommendTvShows();
   }

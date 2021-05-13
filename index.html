@@ -1,89 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>On-Air | P-2424629</title>
-    <!--Fixes console error for favicon.ico:1-->
-    <link rel="shortcut icon" href="#" />
-    <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="css/fonts.css" />
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
-    <base href="/" />
-  </head>
 
-  <body>
-    <div class="nav-fixed">
-      <header>
-        <div class="logo">
-          <a
-            href="https://www.themoviedb.org/"
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            <img
-              class="logo_header"
-              src="../images/tmdb.svg"
-              width="154"
-              height="20"
-              alt="The Movie Database (TMDb)"
-            />
-          </a>
-        </div>
-        <input type="checkbox" id="nav-toggle" class="nav-toggle" />
-        <nav>
-          <ul>
-            <li><a href="../index.html">Home</a></li>
-            <li><a href="../pages/favorites.html">Favorites</a></li>
-            <li>
-              <a
-                href="https://tinyurl.com/4mxwzz3c"
-                target="_blank"
-                rel="noreferrer noopener"
-                >Github</a
-              >
-            </li>
-          </ul>
-        </nav>
-        <label for="nav-toggle" class="nav-toggle-label">
-          <span></span>
-        </label>
-      </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>On-Air | P-2424629</title>
+  <!--Fixes console error for favicon.ico:1-->
+  <link rel="shortcut icon" href="#" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/fonts.css" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <base href="/" />
+</head>
+
+<body>
+  <div class="nav-fixed">
+    <header>
+      <div class="logo">
+        <a href="https://www.themoviedb.org/" target="_blank" rel="noreferrer noopener">
+          <img class="logo_header" src="../images/tmdb.svg" width="154" height="20" alt="The Movie Database (TMDb)" />
+        </a>
+      </div>
+      <input type="checkbox" id="nav-toggle" class="nav-toggle" />
+      <nav>
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../pages/favorites.html">Favorites</a></li>
+          <li>
+            <a href="https://tinyurl.com/4mxwzz3c" target="_blank" rel="noreferrer noopener">Github</a>
+          </li>
+        </ul>
+      </nav>
+      <label for="nav-toggle" class="nav-toggle-label">
+        <span></span>
+      </label>
+    </header>
+  </div>
+
+  <main class="main">
+    <div class="pageTitle">
+      <h1>On air</h1>
     </div>
 
-    <main class="main">
-      <div class="pageTitle">
-        <h1>On air</h1>
-      </div>
+    <!-- Error MSGs -->
+    <div class="errors"></div>
 
-      <!-- Error MSGs -->
-      <div class="errors"></div>
+    <!-- Spinner -->
+    <div class="spinner"></div>
+    <!-- Smooth scroll to top button -->
+    <button class="scrollToTop">
+      <i class="material-icons upArrow">expand_less</i>
+    </button>
 
-      <!-- Spinner -->
-      <div class="spinner"></div>
-      <!-- Smooth scroll to top button -->
-      <button class="scrollToTop">
-        <i class="material-icons upArrow">expand_less</i>
-      </button>
+    <!-- tv shows area-->
+    <div id="tvShows"></div>
 
-      <!-- tv shows area-->
-      <div id="tvShows"></div>
+    <!-- Notifications -->
+    <div class="notification" id="added"></div>
+    <div class="notification" id="alreadyStored"></div>
 
-      <!-- Notifications -->
-      <div class="notification" id="added"></div>
-      <div class="notification" id="alreadyStored"></div>
+    <!-- Buttons for Pages -->
+    <div class="pages">
+      <button id="prev" title="Previous page">PREVIOUS</button>
+      <label id="pageNumber"></label>
+      <button id="next" title="Next page">NEXT</button>
+    </div>
+  </main>
 
-      <!-- Buttons for Pages -->
-      <div class="pages">
-        <button id="prev" title="Previous page">PREVIOUS</button>
-        <label id="pageNumber"></label>
-        <button id="next" title="Next page">NEXT</button>
-      </div>
-    </main>
+  <script type="module" src="js/scripts.js"></script>
+</body>
 
-    <script type="module" src="js/scripts.js"></script>
-  </body>
 </html>

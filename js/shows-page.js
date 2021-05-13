@@ -1,6 +1,5 @@
 // API STUFF.
 // /*eslint-disable */
-import { API_KEY, API_URL, IMG_URL, POSTER_SIZE } from './config.js';
 import {
   scrollToTopHandle,
   hideMenu,
@@ -41,9 +40,10 @@ const onFirstLoad = async () => {
   }
 };
 const initApp = () => {
-  document.addEventListener('scroll', scrollToTopHandle, { passive: false });
-  window.addEventListener('scroll', hideMenu, { passive: false });
-  // main.addEventListener('mousedown', hideMenu);
+  const main = document.querySelector('.main');
+  document.addEventListener('scroll', scrollToTopHandle);
+  window.addEventListener('scroll', hideMenu);
+  main.addEventListener('mousedown', hideMenu);
   onFirstLoad();
 };
 

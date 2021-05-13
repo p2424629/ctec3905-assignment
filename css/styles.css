@@ -19,6 +19,7 @@
 .errors {
   display: none;
 }
+
 /* WHOLE PAGE */
 
 *,
@@ -66,6 +67,7 @@ a {
   color: var(--white_color);
 }
 
+/* Change color on hover only when supported */
 @media (hover: hover) {
   .scrollToTop:hover {
     background-color: var(--white_color);
@@ -146,6 +148,7 @@ a {
 /* ========== Global parameters. - END ========== */
 
 /* ========== NAV BAR STYLES START ========== */
+/* Wrapper to nav bar to avoid overlap */
 .nav-fixed {
   position: relative;
   height: 64px;
@@ -196,6 +199,7 @@ header {
   cursor: pointer;
 }
 
+/* Creating lines for hamburger using pseudo elements */
 .nav-toggle-label span,
 .nav-toggle-label span::before,
 .nav-toggle-label span::after {
@@ -208,6 +212,7 @@ header {
   transition: all 0.35s ease;
 }
 
+/* position the lines */
 .nav-toggle-label span::before,
 .nav-toggle-label span::after {
   content: '';
@@ -222,6 +227,7 @@ header {
   top: 7px;
 }
 
+/* animate the burger when active. */
 .nav-toggle-label.active span:nth-child(1) {
   transform: rotate(45deg);
 }
@@ -279,6 +285,7 @@ nav a:hover {
   color: var(--hover);
 }
 
+/* Looking for the sibling of nav not its child (https://www.w3.org/TR/css3-selectors/#general-sibling-combinators) */
 .nav-toggle:checked ~ nav {
   transform: scale(1, 1);
 }
@@ -311,7 +318,7 @@ nav a:hover {
   background: linear-gradient(
       to bottom,
       hsl(0 0% 0% / 0) 39%,
-      hsl(0 0% 0% / 0) 41%,
+      hsl(0 0% 0% / 0.1) 41%,
       hsl(0 0% 0% / 0.65) 100%
     ),
     var(--url);
@@ -351,6 +358,7 @@ h4 {
 }
 
 .randomParagraph {
+  font-family: 'Montserrat Medium', sans-serif;
   overflow: hidden;
   position: relative;
   text-align: justify;
@@ -390,13 +398,13 @@ h4 {
   --padding: 1.5rem;
   --height: 100%;
   height: var(--height);
-  width: 350px;
+  width: 430px;
   position: relative;
   transition: transform 500ms ease;
   z-index: 2;
   overflow: hidden;
   cursor: default;
-  margin: 1em;
+  margin: 0.7em;
   border-radius: 0.5rem;
 }
 
@@ -414,7 +422,7 @@ h4 {
   position: absolute;
   bottom: 0;
   left: 0;
-  margin: 5px;
+  margin: 1rem;
 }
 
 /* button shouldn't follow the delay animation for hover */
@@ -461,6 +469,7 @@ h4 {
   align-items: center;
 }
 
+/* Give some space for the Star and Calendar icons */
 .tvShow p i {
   margin-left: 5px;
   margin-bottom: 2px;
@@ -471,15 +480,10 @@ h4 {
   color: gold;
 }
 
-.date {
-  color: var(--white_color);
-  text-shadow: 3px 3px rgba(0, 0, 0, 0.35);
-}
-
 .card-title {
   font-family: 'Montserrat Black', sans-serif;
   position: relative;
-  font-size: 3ch;
+  font-size: 2.6ch;
   max-width: 100%;
   color: white;
   text-transform: uppercase;
@@ -492,9 +496,8 @@ h4 {
   content: '';
   position: absolute;
   height: 4px;
-  width: calc(
-    100% + var(--padding)
-  ); /*Passing a scope variable. CSS validator again complains.*/
+  width: calc(100% + var(--padding));
+  /*Passing a scope variable. CSS validator again complains.*/
   left: calc(var(--padding) * -1);
   bottom: 0;
   background: var(--hover);
@@ -512,20 +515,32 @@ h4 {
   transition: 0.3s ease-out;
 }
 
+/* Favorites button to right corner */
 .card .addBtn {
   position: absolute;
   top: 10px;
   right: 10px;
   display: flex;
+  margin: 0 0.3rem;
 }
 
-.card .addBtn > * {
-  margin: 0 3px;
-}
+/* Reveal the favorites button when shown */
+@media (hover: hover) {
+  .card:hover .addBtn i {
+    opacity: 1;
+    transform: scale(1);
+  }
 
-.card:hover .addBtn i {
-  opacity: 1;
-  transform: scale(1);
+  /* animate and color change */
+  .addBtn .favorite:hover {
+    color: var(--red_color);
+    animation: heart 0.65s ease forwards infinite;
+    transition-delay: 0s;
+  }
+
+  .addBtn .trash:hover {
+    animation: trash 0.5s ease forwards infinite;
+  }
 }
 
 .card .addBtn i {
@@ -537,16 +552,12 @@ h4 {
   cursor: pointer;
 }
 
-.addBtn .favorite:hover {
-  color: var(--red_color);
-  animation: heart 0.65s ease forwards infinite;
-  transition-delay: 0s;
-}
-
+/* if clicked, stay red */
 .addBtn .favorite:focus {
   color: var(--red_color);
 }
 
+/* in and out with some rotation */
 @keyframes heart {
   0% {
     transform: scale(0.7) rotate(0deg);
@@ -561,10 +572,7 @@ h4 {
   }
 }
 
-.addBtn .trash:hover {
-  animation: trash 0.5s ease forwards infinite;
-}
-
+/* side-to-side animation */
 @keyframes trash {
   0% {
     transform: rotate(0deg);
@@ -584,6 +592,7 @@ h4 {
 }
 
 /* TV SHOWS DETAILS PAGE - START */
+/* use almost all the width on mobiles */
 .main-details {
   display: block;
   width: 95%;
@@ -591,6 +600,7 @@ h4 {
   max-width: 1280px;
 }
 
+/* all rows share these */
 .col {
   float: left;
   box-sizing: border-box;
@@ -598,6 +608,7 @@ h4 {
   min-height: 1px;
 }
 
+/* make all the rows after pseudo element grids so they stay in columns but can individually change. */
 .tvShowRow::after,
 .castsRow::after,
 .trailerRow::after,
@@ -616,6 +627,7 @@ h4 {
   margin-bottom: 20px;
 }
 
+/* center the poster on mobiles */
 .tvShowRow .card_img {
   display: flex;
   justify-content: center;
@@ -623,6 +635,7 @@ h4 {
   transition: 0.5s ease-in-out;
 }
 
+/* use the full width on mobiles. Basically changing into 1 column. Same with poster */
 .tvShowRow .tvShowDetails {
   display: inline-block;
   width: 100%;
@@ -644,6 +657,7 @@ h4 {
   margin: 1rem 0 1rem 0;
   width: 100%;
 }
+
 .buttons a {
   font-family: 'Montserrat Medium', Arial, Helvetica, sans-serif;
   font-size: 2ch;
@@ -656,11 +670,14 @@ h4 {
   text-align: center;
   transition: 0.2s ease;
 }
+
+/* all childs of buttons, the "a", get these. */
 .buttons > * {
   margin: 0 0.4em 0 0;
   cursor: pointer;
 }
 
+/* Got the twitter icon as svg. https://ionic.io/ionicons */
 .twitter::before {
   display: block;
   content: '\f243';
@@ -668,6 +685,7 @@ h4 {
   transition: 0.2s;
   font-size: 1.8ch;
 }
+
 .buttons .twitter {
   display: block;
   background-color: white;
@@ -675,27 +693,34 @@ h4 {
   width: 3rem;
   overflow: hidden;
 }
-.buttons a:hover {
-  background-color: var(--background_color);
-  color: white;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 8px;
-}
-.buttons .twitter:hover {
-  background-color: var(--blue_color);
-}
-.buttons .twitter:hover::before {
-  color: white;
+
+@media (hover: hover) {
+  .buttons a:hover {
+    background-color: var(--background_color);
+    color: white;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 8px;
+  }
+
+  .buttons .twitter:hover {
+    background-color: var(--blue_color);
+  }
+
+  .buttons .twitter:hover::before {
+    color: white;
+  }
 }
 
 .main-details h4 {
   font-family: 'Montserrat SemiBold', Arial, Helvetica, sans-serif;
   padding: 0 0.75rem;
 }
+
 .smallText {
   font-size: 1ch;
   color: var(--dark_color);
   font-family: 'Montserrat SemiBold';
 }
+
 h3 {
   font-family: 'Montserrat SemiBold', Arial, Helvetica, sans-serif;
   font-size: 4.3ch;
@@ -735,11 +760,13 @@ blockquote p {
 .castsRow .actorCard {
   text-align: center;
 }
+
 .actorsContainer {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   grid-gap: 0.5rem;
 }
+
 .recommendations {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
@@ -747,10 +774,12 @@ blockquote p {
   margin-right: 1.7rem;
 }
 
+/* Specific width for the details page since we use grid.*/
 .recommendations .card,
 .recommendations .overlay,
 .recommendations .card_img {
   width: 100%;
+  margin: 0;
 }
 
 .cardPanel {
@@ -795,6 +824,7 @@ blockquote p {
   height: 0;
   overflow: hidden;
 }
+
 .videoContainer iframe,
 embed {
   position: absolute;
@@ -847,6 +877,7 @@ embed {
   cursor: pointer;
   transition: 0.3s ease;
 }
+
 #pageNumber {
   display: flex;
   justify-content: center;
@@ -862,11 +893,19 @@ embed {
   font-family: 'Montserrat Black', Arial, Helvetica, sans-serif;
   width: 50px;
 }
+
 @media (hover: hover) {
   #prev:hover,
   #next:hover {
     color: var(--dark_color);
     box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 15px;
+  }
+
+  .remove:hover,
+  .randomize:hover {
+    background-color: var(--white_color);
+    color: var(--background_color);
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 8px;
   }
 }
 
@@ -886,15 +925,6 @@ embed {
   transition: 0.25s;
   cursor: pointer;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-}
-
-@media (hover: hover) {
-  .remove:hover,
-  .randomize:hover {
-    background-color: var(--white_color);
-    color: var(--background_color);
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 8px;
-  }
 }
 
 /* NOTIFICATIONS */
@@ -959,13 +989,18 @@ embed {
     height: var(--height);
     width: 280px;
   }
+
+  .recommendations .card_img {
+    width: 100%;
+  }
   .nav-toggle-label {
     display: none;
   }
 
   header {
     display: grid;
-    grid-template-columns: 1fr auto minmax(600px, 3fr) 1fr; /*1fr force the first child, auto for 2nd, stretch 3rd as 3fr and min 600px, 1fr force 4th*/
+    /*1fr force the first child, auto for 2nd, stretch 3rd as 3fr and min 600px, 1fr force 4th*/
+    grid-template-columns: 1fr auto minmax(600px, 3fr) 1fr;
   }
 
   .logo {
@@ -1029,18 +1064,14 @@ embed {
 
   /* Details Page */
   .tvShowRow .card_img {
+    /* Keep image align on left until mobile */
     width: 33%;
-    display: block; /* Keep image align on left until mobile */
+    display: block;
   }
 
+  /* use 2/3 of available space */
   .tvShowRow .tvShowDetails {
     width: 66%;
-  }
-
-  .recommendations .card,
-  .recommendations .overlay,
-  .recommendations .card_img {
-    width: 100%;
   }
 }
 
@@ -1049,13 +1080,10 @@ embed {
 @media screen and (min-width: 1024px) {
   /* applies to screens wider than 999px */
   .card {
-    position: relative;
-    z-index: 2;
     transition: 0.4s ease;
   }
 
   .card .overlay {
-    /* height: 100%; */
     /* gradient on overlay */
     background: linear-gradient(
       hsl(0 0% 0% / 0),
@@ -1118,7 +1146,7 @@ embed {
   .card,
   .card .card_img,
   .card_img img {
-    width: 300px;
+    width: 350px;
     overflow: hidden;
   }
 

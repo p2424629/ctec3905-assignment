@@ -1,6 +1,11 @@
 /* eslint-disable import/extensions */
 /* eslint-disable camelcase */
-import { API_KEY, API_URL, IMG_URL, POSTER_SIZE } from './config.js';
+import {
+  API_KEY,
+  API_URL,
+  IMG_URL,
+  POSTER_SIZE,
+} from './config.js';
 
 // Take the user to detailed tv show info page.
 const showSelected = async (event) => {
@@ -8,7 +13,7 @@ const showSelected = async (event) => {
   sessionStorage.setItem('showId', event.currentTarget.showId);
   window.open(
     `../pages/shows-page.html?showId=${event.currentTarget.showId}`,
-    '_blank'
+    '_blank',
   );
   return false;
 };
@@ -17,9 +22,8 @@ export const scrollToTopHandle = () => {
   const scrollToTop = document.querySelector('.scrollToTop');
 
   // Show ScrollToTop button after scrolling.
-  const scrollableHeight =
-    document.documentElement.scrollHeight -
-    document.documentElement.clientHeight;
+  const scrollableHeight = document.documentElement.scrollHeight
+    - document.documentElement.clientHeight;
   const GOLDEN_RATIO = 0.1;
   if (document.documentElement.scrollTop / scrollableHeight > GOLDEN_RATIO) {
     // show button
@@ -45,6 +49,7 @@ export const hideMenu = () => {
   const menuOpen = document.querySelector('.nav-toggle').checked;
   if (menuOpen === true) {
     document.querySelector('.nav-toggle').checked = false;
+    document.querySelector('.nav-toggle-label').classList.remove('active');
   }
 };
 
@@ -93,8 +98,7 @@ const removeFavorite = (id) => {
 };
 
 const tweet = (title) => {
-  const windowFeatures =
-    'location=yes,height=300,width=550,scrollbars=yes,status=yes';
+  const windowFeatures = 'location=yes,height=300,width=550,scrollbars=yes,status=yes';
   const url = `https://twitter.com/intent/tweet?text=Going to watch "${title}" . Created for &hashtags=CTEC3905,DMU`;
   window.open(url, '_blank', windowFeatures);
 };
@@ -105,11 +109,11 @@ async function getData(url) {
   return response.json().then((responseJson) => {
     if (responseJson.errors) {
       throw new Error(
-        `HTTP ${response.status} ${response.statusText}: ${responseJson.errors}`
+        `HTTP ${response.status} ${response.statusText}: ${responseJson.errors}`,
       );
     }
     throw new Error(
-      `HTTP ${response.status} ${response.statusText}: ${responseJson.status_message}`
+      `HTTP ${response.status} ${response.statusText}: ${responseJson.status_message}`,
     );
   });
 }
@@ -208,7 +212,13 @@ export const buildResults = (obj) => {
   try {
     let seriesInfo = document.getElementById('tvShows');
 
-    const { id, name, vote_average, first_air_date, poster_path } = obj;
+    const {
+      id,
+      name,
+      vote_average,
+      first_air_date,
+      poster_path,
+    } = obj;
     const showItem = createShowItem(id, name, vote_average, first_air_date);
     const addBtn = createAddBtn(id);
     const overlay = document.createElement('div');
@@ -386,7 +396,7 @@ const detailsTvInfo = (showInfo, externals) => {
     homepage,
     buttonsCont,
     overviewTitle,
-    overview
+    overview,
   );
 
   // Buttons
@@ -408,7 +418,7 @@ const trailerProcess = (videoUrl) => {
     return [trailerTitle, videoContainer];
   }
   const trailers = videoUrl.results.filter(
-    (ele) => ele.site === 'YouTube' && ele.type.includes('Trailer')
+    (ele) => ele.site === 'YouTube' && ele.type.includes('Trailer'),
   );
   // Get random Trailer.
   let min = 0;
@@ -457,8 +467,7 @@ const recommendationsProcess = (recommendations) => {
   recommendationsCont.classList.add('recommendations');
   if (!recommendations || recommendations.results.length === 0) {
     const noRecommendations = document.createElement('h6');
-    noRecommendations.textContent =
-      'Sorry! No recommendations for this Tv Show for now.';
+    noRecommendations.textContent = 'Sorry! No recommendations for this Tv Show for now.';
     recommendationsCont.appendChild(noRecommendations);
     return [recommendationsTitle, recommendationsCont];
   }
@@ -474,7 +483,7 @@ export const buildShowResults = (
   videoUrl,
   actors,
   externals,
-  recommendations
+  recommendations,
 ) => {
   try {
     const main = document.querySelector('.main-details');
@@ -492,7 +501,7 @@ export const buildShowResults = (
     // Show info.
     const [posterContainer, tvShowDetailsContainer] = detailsTvInfo(
       showInfo,
-      externals
+      externals,
     );
 
     // Casts of tv show.
@@ -501,8 +510,7 @@ export const buildShowResults = (
     const [trailerTitle, trailer] = trailerProcess(videoUrl);
 
     // Recommendations.
-    const [recommendationsTitle, recommendationsCont] =
-      recommendationsProcess(recommendations);
+    const [recommendationsTitle, recommendationsCont] = recommendationsProcess(recommendations);
     // Appending elements to rows.
     tvShowRow.append(posterContainer, tvShowDetailsContainer);
     castsRow.append(castTitle, actorsContainer);

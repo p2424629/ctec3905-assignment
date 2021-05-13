@@ -1,6 +1,8 @@
 /* eslint-disable import/extensions */
 // /* eslint-disable */
-import { IMG_URL } from './config.js';
+import {
+  IMG_URL,
+} from './config.js';
 import {
   scrollToTopHandle,
   hideMenu,
@@ -83,8 +85,7 @@ const randomImg = (obj) => {
     randomImageContainer.classList.add('randomImageContainer');
   }
   const cleanObj = obj.results.filter((res) => res.backdrop_path);
-  const randomShow =
-    cleanObj[Math.floor(Math.random() * cleanObj.length)] || cleanObj[0];
+  const randomShow = cleanObj[Math.floor(Math.random() * cleanObj.length)] || cleanObj[0];
   const randomImage = document.createElement('div');
   randomImage.classList.add('randomImage');
   randomImage.style = `--url: url('${IMG_URL}w1280${randomShow.backdrop_path}')`; // Passing arguments to css file from JS.
