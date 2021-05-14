@@ -159,8 +159,8 @@ const createShowItem = (id, name, voteAverage, firstAirDate) => {
   detailsBtn.textContent = 'Details';
   detailsBtn.href = '#';
   detailsBtn.showId = id;
-  detailsBtn.addEventListener('click', showSelected);
-
+  // detailsBtn.addEventListener('click', showSelected);
+  detailsBtn.addEventListener('mousedown', showSelected);
   const showItem = document.createElement('div');
   showItem.classList.add('tvShow');
   showItem.append(showTitle, voteAvgContainer, airDateContainer, detailsBtn);
