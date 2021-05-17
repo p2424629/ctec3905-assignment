@@ -690,8 +690,8 @@ h4 {
   color: var(--blue_color);
   width: 3rem;
   overflow: hidden;
-  justify-content: center;
-  align-content: center;
+  justify-items: center;
+  align-items: center;
 }
 @media (hover: hover) {
   .buttons a:hover {
