@@ -397,8 +397,8 @@ h4 {
 .card {
   --padding: 1.5rem;
   --height: 100%;
-  height: var(--height);
-  width: 430px;
+  height: 550px;
+  width: 380px;
   position: relative;
   transition: transform 500ms ease;
   z-index: 2;
@@ -986,7 +986,7 @@ embed {
   .card,
   .card .card_img,
   .card_img img {
-    height: var(--height);
+    height: 450px;
     width: 280px;
   }
 
