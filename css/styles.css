@@ -690,7 +690,7 @@ h4 {
   color: var(--blue_color);
   width: 3rem;
   overflow: hidden;
-  justify-items: center;
+  justify-content: center;
   align-items: center;
 }
 @media (hover: hover) {
